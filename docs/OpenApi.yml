@@ -370,6 +370,100 @@ paths:
                   code:
                     type: string
                     enum: ['ERROR_SERVER'] 
+    put:
+      security:
+        - bearerAuth: []
+      summary: Update user information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '200': 
+          description: Update user information
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+  /forgot:
+    post:
+      summary: Set a temporary password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
   /categories:
     get:
       summary: Get a list of categories
