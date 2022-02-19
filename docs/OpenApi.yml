@@ -1,0 +1,549 @@
+openapi: 3.0.0
+info:
+  title: WeBlog
+  description: WeBlog back-end specification
+  version: 1.0.1
+servers:
+  - url: https://weblog-next.vercel.app/api
+    description: Stable development
+  - url: https://weblog-next-develop.vercel.app/api
+    description: Nighlty development
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+  schemas:
+    error_missing_header:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+          title: 'Missing authorization header'
+    error_missing_required_properties:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['error']
+        message:
+          type: string
+          enum: ['Missing required values']
+        code:
+          type: string
+          enum: ['ERROR_MISSING_REQUIRED_VALUES']
+    category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: 'date-time'
+        updatedAt:
+          type: string
+          format: 'date-time'
+    user:
+      type: object
+      properties:
+        id:
+          type: string 
+        email:
+          type: string 
+        name:
+          type: string 
+        picture:
+          type: string 
+        createdAt:
+          type: string
+          format: 'date-time'
+        updatedAt:
+          type: string
+          format: 'date-time'
+    comment:
+      type: object
+      properties:
+        id:
+          type: string 
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
+        content:
+          type: string 
+        parent:
+          type: string 
+        createdAt:
+          type: string
+          format: date
+        updatedAt:
+          type: string
+          format: date
+    post:
+      type: object
+      properties:
+        id:
+          type: string 
+        category:
+          type: object
+          $ref: '#/components/schemas/category'
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
+        title:
+          type: string 
+        description:
+          type: string 
+        content:
+          type: string 
+        comments:
+          type: array
+          items: 
+            $ref: '#/components/schemas/comment'
+security:
+  - bearerAuth: [] 
+        
+paths:
+  /register:
+    post:
+      summary: Register a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email: 
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Success creating the user
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '409':
+          description: The email already exist
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['The email already exist']
+                  code:
+                    type: string
+                    enum: ['ERROR_EMAIL_EXIST']  
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+  /login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                password:
+                  type: string
+      summary: Authenticate user
+      responses:
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: string
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  authToken:
+                    type: string
+                  expiredAt:
+                    type: string
+                  message:
+                    type: string
+                  status:
+                    type: string
+  /me:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Return the token holder information
+      responses:
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200': 
+          description: Return the user of the token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  me: 
+                    $ref: '#/components/schemas/user'
+  /categories:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Return a list of all the categories in the app
+      responses:
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200': 
+          description: Return an array of categories
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  categories: 
+                    $ref: '#/components/schemas/category'
+  /categories/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the category
+      summary: Get a list of all the posts in that category
+      responses:
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Array of the posts and comments from a category
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  posts: 
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/post'
+    post:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: 
+                  type: string
+                description: 
+                  type: string
+                content: 
+                  type: string
+      summary: Add a new post in the specified category
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':
+          description: Success message
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: string
+                  success:
+                    type: string                   
+  /posts:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get a list of all the posts from the user
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return a list of posts
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  posts:   
+                    $ref: '#/components/schemas/post'
+  /posts/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the post
+      summary: Return a post by its id
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return a post object
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  post:   
+                    type: object
+                    $ref: '#/components/schemas/post'
+    put:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: 
+                  type: string
+                description: 
+                  type: string
+                content: 
+                  type: string
+      summary: Update a post by its id
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the id of the updated post
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  id:   
+                    type: string
+    delete:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the post
+      summary: Delete a post by its id
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the id of the deleted post
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  id:   
+                    type: string
+  /comments:
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postId: 
+                  type: string
+                content: 
+                  type: string
+      summary: Add a comment to the specified post
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the id of the new comment
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  id:   
+                    type: string
+  /comments/{id}:
+    put:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content: 
+                  type: string
+      summary: Update a comment by its id
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the id of the updated comment
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  id:   
+                    type: string
+    delete:
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id of the comment
+      summary: Delete a comment by its id
+      responses:
+        '400':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '200':    # status code
+          description: Return the id of the deleted comment
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                  id:   
+                    type: string
+   
