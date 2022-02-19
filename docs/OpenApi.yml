@@ -1,13 +1,15 @@
 openapi: 3.0.0
 info:
-  title: WeBlog
-  description: WeBlog back-end specification
-  version: 1.0.1
+  title: GoodEnough
+  description: GoodEnough backend specification
+  version: 0.0.3
 servers:
-  - url: https://weblog-next.vercel.app/api
-    description: Stable development
-  - url: https://weblog-next-develop.vercel.app/api
-    description: Nighlty development
+  - url: http://localhost:3000
+    description: Localhost 
+  - url: https://develop.random.heroku.app
+    description: Develop
+  - url: https://random.heroku.app
+    description: Production
 components:
   securitySchemes:
     bearerAuth:
@@ -40,70 +42,79 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
-        createdAt:
-          type: string
-          format: 'date-time'
-        updatedAt:
-          type: string
-          format: 'date-time'
-    user:
+    product:
       type: object
       properties:
         id:
           type: string 
-        email:
+          format: uuid
+        barcode:
           type: string 
+        barcode_type:
+          type: string 
+          enum:
+            - UPC
+            - EAN
+        type:
+          type: string 
+          enum:
+            - barcode
+            - custom 
         name:
-          type: string 
-        picture:
-          type: string 
-        createdAt:
           type: string
-          format: 'date-time'
-        updatedAt:
+        alias:
           type: string
-          format: 'date-time'
-    comment:
-      type: object
-      properties:
-        id:
+        description: 
           type: string 
-        user:
-          type: object
-          $ref: '#/components/schemas/user'
-        content:
-          type: string 
-        parent:
-          type: string 
-        createdAt:
+        brand:
           type: string
-          format: date
-        updatedAt:
+        manufacturer:
           type: string
-          format: date
-    post:
-      type: object
-      properties:
-        id:
-          type: string 
         category:
           type: object
           $ref: '#/components/schemas/category'
-        user:
-          type: object
-          $ref: '#/components/schemas/user'
-        title:
+    item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        expirationDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date
+        quantity:
+          type: integer
+        initialQuantity:
+          type: integer
+        cost:
+          type: integer
+        isUsed:
+          type: boolean
+    shopping_list_item:
+      type: object
+      properties:
+        id: 
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        cost:
+          type: integer
+        createdAt:  
           type: string 
-        description:
-          type: string 
-        content:
-          type: string 
-        comments:
-          type: array
-          items: 
-            $ref: '#/components/schemas/comment'
+          format: 'date-time'
 security:
   - bearerAuth: [] 
         
@@ -126,8 +137,8 @@ paths:
                 password:
                   type: string
       responses:
-        '200':
-          description: Success creating the user
+        '201':
+          description: Success creating the user entry
           content:
             application/json:
               schema: 
@@ -158,8 +169,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
+  /register/verify:
+    post:
+      summary: Verify user registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+                verificationCode:
+                  type: string
+                  maxLength: 6
+                  minLength: 6
+      responses:
+        '201':
+          description: Create the user 
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: Invalid verification code
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid authentication code']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_AUTH_CODE']  
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
   /login:
     post:
+      summary: Authenticate user
       requestBody:
         required: true
         content:
@@ -171,8 +265,24 @@ paths:
                   type: string
                 password:
                   type: string
-      summary: Authenticate user
       responses:
+        '200':
+          description: Success authentication
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  authToken:
+                    description: JWT token that needs to return
+                    type: string
+                  expiredAt:
+                    description: Date time provide in ISO 8601
+                    type: string
+                    format: 'date-time'
+                  status:
+                    type: string
+                    enum: ['success']
         '401':
           description: 'Invalid credentials'
           content:
@@ -180,39 +290,45 @@ paths:
               schema: 
                 type: object
                 properties:
-                  message:
-                    type: string
                   status:
                     type: string
-        '200':
-          description: Success message
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
           content:
             application/json:
               schema: 
                 type: object
                 properties:
-                  authToken:
-                    type: string
-                  expiredAt:
-                    type: string
-                  message:
-                    type: string
                   status:
                     type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
   /me:
     get:
       security:
         - bearerAuth: []
       summary: Return the token holder information
       responses:
-        '401':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
         '200': 
-          description: Return the user of the token
+          description: Return token information decoded
           content:
             application/json:
               schema: 
@@ -220,73 +336,191 @@ paths:
                 properties:
                   status:
                     type: string
-                  me: 
-                    $ref: '#/components/schemas/user'
+                    enum: [success]
+                  userId:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  email:
+                    type: integer
+                  expiredAt:
+                    description: Date time when the token expired
+                    type: string
+                    format: 'date-time'
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    put:
+      security:
+        - bearerAuth: []
+      summary: Update user information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '200': 
+          description: Update user information
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+        '401':
+          description: 'Missing authorization header'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_header'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+  /forgot:
+    post:
+      summary: Set a temporary password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
   /categories:
     get:
+      summary: Get a list of categories
       security:
         - bearerAuth: []
-      summary: Return a list of all the categories in the app
       responses:
-        '401':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200': 
-          description: Return an array of categories
+        '200':
+          description: Success finding the categories
           content:
             application/json:
               schema: 
                 type: object
                 properties:
-                  status:
-                    type: string
-                  categories: 
-                    $ref: '#/components/schemas/category'
-  /categories/{id}:
-    get:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the category
-      summary: Get a list of all the posts in that category
-      responses:
-        '401':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Array of the posts and comments from a category
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  posts: 
+                  categories:
                     type: array
                     items:
-                      $ref: '#/components/schemas/post'
-    post:
+                      $ref: '#/components/schemas/category'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
+  /products:
+    put:
+      summary: Upsert a product using a barcode
       security:
         - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the category
       requestBody:
         required: true
         content:
@@ -294,118 +528,195 @@ paths:
             schema:
               type: object
               properties:
-                title: 
+                barcode: 
                   type: string
-                description: 
-                  type: string
-                content: 
-                  type: string
-      summary: Add a new post in the specified category
       responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
         '200':
-          description: Success message
+          description: Success
           content:
             application/json:
               schema: 
                 type: object
                 properties:
-                  id:
-                    type: string
-                  success:
-                    type: string                   
-  /posts:
-    get:
-      security:
-        - bearerAuth: []
-      summary: Get a list of all the posts from the user
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return a list of posts
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  posts:   
-                    $ref: '#/components/schemas/post'
-  /posts/{id}:
-    get:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the post
-      summary: Return a post by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return a post object
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  post:   
+                  product:
                     type: object
-                    $ref: '#/components/schemas/post'
-    put:
+                    $ref: '#/components/schemas/product'
+                    nullable: true
+                  status:
+                    type: string
+                    enum: ['success']
+        '201':
+          description: Success creating a product that the user didn't have before
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  productId:
+                    description: Id of the product user id or null if the product do not exist
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    get:
+      summary: Get a list of products
       security:
         - bearerAuth: []
       parameters:
-        - in: path
-          name: id
+        - in: query
+          name: categoryId   
+          description: The uuid of the category
           schema:
-            type: integer
-          required: true
-          description: id of the post
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success finding the products
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/product'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+  /products/custom:
+    put:
+      summary: Upsert a custom product
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - barcode
+                - brand 
+                - name
+                - categoryId
               properties:
-                title: 
+                barcode: 
+                  type: string
+                name: 
+                  type: string
+                alias:
                   type: string
                 description: 
+                  type: string 
+                brand:
                   type: string
-                content: 
+                manufacturer:
                   type: string
-      summary: Update a post by its id
+                categoryId:
+                  type: string 
+                  format: uuid
       responses:
-        '400':
-          description: 'Missing authorization header'
+        '200':
+          description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the updated post
+              schema: 
+                type: object
+                properties:
+                  product:
+                    type: object
+                    $ref: '#/components/schemas/product'
+                  status:
+                    type: string
+                    enum: ['success']
+        '201':
+          description: Success creating a product that the user didn't have before
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  productId:
+                    description: Id of the product user id or null if the product do not exist
+                    type: string
+                    nullable: true
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
           content:
             application/json:
               schema: 
@@ -413,28 +724,15 @@ paths:
                 properties:
                   status:
                     type: string
-                  id:   
+                    enum: ['error']
+                  message:
                     type: string
-    delete:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the post
-      summary: Delete a post by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the deleted post
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '409':
+          description: 'Barcode already exist'
           content:
             application/json:
               schema: 
@@ -442,33 +740,85 @@ paths:
                 properties:
                   status:
                     type: string
-                  id:   
+                    enum: ['error']
+                  message:
                     type: string
-  /comments:
+                    enum: ['Product exist']
+                  code:
+                    type: string
+                    enum: ['ERROR_BARCODE_UNIQUE']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+  /products/{productId}:
     post:
+      summary: Add an item to a product 
       security:
         - bearerAuth: []
+      parameters:
+        - in: path
+          required: true
+          name: productId   
+          description: The uuid of the product
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
+              required:
+                - expirationDate
+                - quantity 
+                - cost
               properties:
-                postId: 
+                expirationDate: 
                   type: string
-                content: 
-                  type: string
-      summary: Add a comment to the specified post
+                  format: 'date-time'
+                quantity:
+                  type: integer
+                  minimum: 1
+                cost: 
+                  type: number
       responses:
-        '400':
-          description: 'Missing authorization header'
+        '201':
+          description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the new comment
+              schema: 
+                type: object
+                properties:
+                  item:
+                    description: Item created
+                    type: object
+                    $ref: '#/components/schemas/item'
+                    
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
           content:
             application/json:
               schema: 
@@ -476,19 +826,101 @@ paths:
                 properties:
                   status:
                     type: string
-                  id:   
+                    enum: ['error']
+                  message:
                     type: string
-  /comments/{id}:
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']            
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Product not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_PRODUCT']
+        '409':
+          description: 'Expiration in the past, negative numbers'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: [
+                      'Expiration date in the past',
+                      'Negative numbers are invalid'
+                    ]
+                  code:
+                    type: string
+                    enum: [
+                      'ERROR_PAST_EXPIRATION_DATE',
+                      'ERROR_NEGATIVE_NUMBERS',
+                    ]
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']     
     put:
+      summary: Update a product 
       security:
         - bearerAuth: []
       parameters:
         - in: path
-          name: id
-          schema:
-            type: integer
           required: true
-          description: id of the comment
+          name: productId   
+          description: The uuid of the product
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -496,18 +928,38 @@ paths:
             schema:
               type: object
               properties:
-                content: 
+                barcode: 
                   type: string
-      summary: Update a comment by its id
+                  description: This can only be updated if the product is custom
+                name: 
+                  type: string
+                alias:
+                  type: string
+                description: 
+                  type: string 
+                brand:
+                  type: string
+                manufacturer:
+                  type: string
+                categoryId:
+                  type: string 
+                  format: uuid
       responses:
-        '400':
-          description: 'Missing authorization header'
+        '200':
+          description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the updated comment
+              schema: 
+                type: object
+                properties:
+                  product:  
+                    type: object
+                    $ref: '#/components/schemas/product'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
           content:
             application/json:
               schema: 
@@ -515,28 +967,365 @@ paths:
                 properties:
                   status:
                     type: string
-                  id:   
+                    enum: ['error']
+                  message:
                     type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Product not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_PRODUCT']
+        '409':
+          description: 'Barcode already exist'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Product exist']
+                  code:
+                    type: string
+                    enum: ['ERROR_BARCODE_UNIQUE']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    get:
+      summary: Get a product by its id
+      parameters:
+        - in: path
+          required: true
+          name: productId   
+          description: The uuid of the product
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success finding the product
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  product:
+                    type: object
+                    $ref: '#/components/schemas/product'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Product not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_PRODUCT']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
     delete:
+      summary: Delete a product by its id
+      parameters:
+        - in: path
+          name: productId  
+          required: true 
+          description: The uuid of the product
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success deleting the product
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Product not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_PRODUCT']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']   
+  /items:
+    get:
+      summary: Get a list of all the items
+      parameters:
+        - in: query
+          name: productId   
+          description: Filter items by the product
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: used
+          description: Filter items if they are used or not
+          schema:
+            type: boolean     
+      responses:
+        '200':
+          description: Success finding the product
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/item'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']   
+  /items/{itemId}:
+    put:
+      summary: Update a item 
       security:
         - bearerAuth: []
       parameters:
         - in: path
-          name: id
-          schema:
-            type: integer
           required: true
-          description: id of the comment
-      summary: Delete a comment by its id
+          name: itemId   
+          description: The uuid of the item
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expirationDate: 
+                  type: string
+                  format: 'date-time'
+                initialQuantity:
+                  type: integer
+                quantity:
+                  type: integer
+                cost: 
+                  type: number 
+                isUsed:
+                  type: boolean                
       responses:
-        '400':
-          description: 'Missing authorization header'
+        '200':
+          description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the deleted comment
+              schema: 
+                type: object
+                properties:
+                  item:  
+                    type: object
+                    $ref: '#/components/schemas/item'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
           content:
             application/json:
               schema: 
@@ -544,6 +1333,742 @@ paths:
                 properties:
                   status:
                     type: string
-                  id:   
+                    enum: ['error']
+                  message:
                     type: string
-   
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Item not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Item not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_ITEM']
+        '409':
+          description: 'Expiration in the past, negative numbers'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: [
+                      'Expiration date in the past',
+                      'Negative numbers are invalid'
+                    ]
+                  code:
+                    type: string
+                    enum: [
+                      'ERROR_PAST_EXPIRATION_DATE',
+                      'ERROR_NEGATIVE_NUMBERS',
+                    ]
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    get:
+      summary: Get an item by its id
+      parameters:
+        - in: path 
+          required: true
+          name: itemId   
+          description: The uuid of the item
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success finding the item
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  item:
+                    type: object
+                    $ref: '#/components/schemas/item'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Item not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Item not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_ITEM']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    delete:
+      summary: Delete an item by its id
+      parameters:
+        - in: path
+          name: itemId  
+          required: true 
+          description: The uuid of the item
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success deleting the item
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Item not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Item not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_ITEM']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']   
+  /shopping:
+    post:
+      summary: Add an item to the shopping list 
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - expirationDate
+                - quantity 
+                - cost
+              properties:
+                productId: 
+                  type: string
+                  format: uuid
+                quantity:
+                  type: integer
+                  minimum: 1
+                cost: 
+                  type: number
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  item:
+                    description: Shopping list item created
+                    type: object
+                    $ref: '#/components/schemas/shopping_list_item'
+                    
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']            
+        '404':
+          description: 'Product not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Product not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_PRODUCT']
+        '409':
+          description: 'Negative numbers'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: [
+                      'Negative numbers are invalid'
+                    ]
+                  code:
+                    type: string
+                    enum: [
+                      'ERROR_NEGATIVE_NUMBERS',
+                    ]
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']      
+    get:
+      summary: Get a list of all the items in the shopping list  
+      responses:
+        '200':
+          description: Success finding the product
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/shopping_list_item'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']   
+  /shopping/{itemId}:
+    put:
+      summary: Update a shopping list item 
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          required: true
+          name: itemId   
+          description: The uuid of the item
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                cost: 
+                  type: number 
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  item:  
+                    type: object
+                    $ref: '#/components/schemas/shopping_list_item'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Item not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Item not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_ITEM']
+        '409':
+          description: 'Expiration in the past, negative numbers'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: [
+                      'Expiration date in the past',
+                      'Negative numbers are invalid'
+                    ]
+                  code:
+                    type: string
+                    enum: [
+                      'ERROR_PAST_EXPIRATION_DATE',
+                      'ERROR_NEGATIVE_NUMBERS',
+                    ]
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    get:
+      summary: Get a shopping list item by its id
+      parameters:
+        - in: path 
+          required: true
+          name: itemId   
+          description: The uuid of the item
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success finding the item
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  item:
+                    type: object
+                    $ref: '#/components/schemas/shopping_list_item'
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Item not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Item not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_ITEM']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
+    delete:
+      summary: Delete an item by its id
+      parameters:
+        - in: path
+          name: itemId  
+          required: true 
+          description: The uuid of the item
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success deleting the item
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '403':
+          description: 'Not authorized'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Not authorized to perform that action']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_ALLOWED']
+        '404':
+          description: 'Item not found'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Item not found']
+                  code:
+                    type: string
+                    enum: ['ERROR_NOT_FOUND_ITEM']
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']   
+  
