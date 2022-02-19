@@ -1,13 +1,15 @@
 openapi: 3.0.0
 info:
-  title: WeBlog
-  description: WeBlog back-end specification
-  version: 1.0.1
+  title: GoodEnough
+  description: GoodEnough backend specification
+  version: 0.0.3
 servers:
-  - url: https://weblog-next.vercel.app/api
-    description: Stable development
-  - url: https://weblog-next-develop.vercel.app/api
-    description: Nighlty development
+  - url: http://localhost:3000
+    description: Localhost 
+  - url: https://develop.random.heroku.app
+    description: Develop
+  - url: https://random.heroku.app
+    description: Production
 components:
   securitySchemes:
     bearerAuth:
@@ -40,70 +42,66 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
-        createdAt:
-          type: string
-          format: 'date-time'
-        updatedAt:
-          type: string
-          format: 'date-time'
-    user:
+    product:
       type: object
       properties:
         id:
           type: string 
-        email:
+          format: uuid
+        barcode:
           type: string 
+        barcode_type:
+          type: string 
+        type:
+          type: string 
+          enum:
+            - custom 
+            - barcode
         name:
-          type: string 
-        picture:
-          type: string 
-        createdAt:
           type: string
           format: 'date-time'
-        updatedAt:
-          type: string
-          format: 'date-time'
-    comment:
-      type: object
-      properties:
-        id:
-          type: string 
-        user:
-          type: object
-          $ref: '#/components/schemas/user'
-        content:
-          type: string 
-        parent:
-          type: string 
-        createdAt:
-          type: string
-          format: date
-        updatedAt:
-          type: string
-          format: date
-    post:
-      type: object
-      properties:
-        id:
-          type: string 
         category:
           type: object
           $ref: '#/components/schemas/category'
-        user:
-          type: object
-          $ref: '#/components/schemas/user'
-        title:
-          type: string 
-        description:
-          type: string 
-        content:
-          type: string 
-        comments:
-          type: array
-          items: 
-            $ref: '#/components/schemas/comment'
+    item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        expirationDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date
+        quantity:
+          type: integer
+        initialQuantity:
+          type: integer
+        cost:
+          type: integer
+        isUsed:
+          type: boolean
+    shopping_list_item:
+      type: object
+      properties:
+        id: 
+          type: string
+          format: uuid
+        productId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+        cost:
+          type: integer
 security:
   - bearerAuth: [] 
         
@@ -126,8 +124,8 @@ paths:
                 password:
                   type: string
       responses:
-        '200':
-          description: Success creating the user
+        '201':
+          description: Success creating the user entry
           content:
             application/json:
               schema: 
@@ -158,8 +156,91 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
+  /register/verify:
+    post:
+      summary: Verify user registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  format: email
+                verificationCode:
+                  type: string
+                  maxLength: 6
+                  minLength: 6
+      responses:
+        '201':
+          description: Create the user 
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['success']
+        '401':
+          description: Invalid verification code
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid authentication code']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_AUTH_CODE']  
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER']  
   /login:
     post:
+      summary: Authenticate user
       requestBody:
         required: true
         content:
@@ -171,8 +252,24 @@ paths:
                   type: string
                 password:
                   type: string
-      summary: Authenticate user
       responses:
+        '200':
+          description: Success authentication
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  authToken:
+                    description: JWT token that needs to return
+                    type: string
+                  expiredAt:
+                    description: Date time provide in ISO 8601
+                    type: string
+                    format: 'date-time'
+                  status:
+                    type: string
+                    enum: ['success']
         '401':
           description: 'Invalid credentials'
           content:
@@ -180,39 +277,45 @@ paths:
               schema: 
                 type: object
                 properties:
-                  message:
-                    type: string
                   status:
                     type: string
-        '200':
-          description: Success message
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Invalid credential']
+                  code:
+                    type: string
+                    enum: ['ERROR_INVALID_CREDENTIALS']
+        '422':
+          description: 'Invalid or missing requirements'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_missing_required_properties'
+        '500':
+          description: 'Server error'
           content:
             application/json:
               schema: 
                 type: object
                 properties:
-                  authToken:
-                    type: string
-                  expiredAt:
-                    type: string
-                  message:
-                    type: string
                   status:
                     type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['Server error']
+                  code:
+                    type: string
+                    enum: ['ERROR_SERVER'] 
   /me:
     get:
       security:
         - bearerAuth: []
       summary: Return the token holder information
       responses:
-        '401':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
         '200': 
-          description: Return the user of the token
+          description: Return token information decoded
           content:
             application/json:
               schema: 
@@ -220,22 +323,26 @@ paths:
                 properties:
                   status:
                     type: string
-                  me: 
-                    $ref: '#/components/schemas/user'
-  /categories:
-    get:
-      security:
-        - bearerAuth: []
-      summary: Return a list of all the categories in the app
-      responses:
+                    enum: [success]
+                  userId:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  email:
+                    type: integer
+                  expiredAt:
+                    description: Date time when the token expired
+                    type: string
+                    format: 'date-time'
         '401':
           description: 'Missing authorization header'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error_missing_header'
-        '200': 
-          description: Return an array of categories
+        '500':
+          description: 'Server error'
           content:
             application/json:
               schema: 
@@ -243,307 +350,11 @@ paths:
                 properties:
                   status:
                     type: string
-                  categories: 
-                    $ref: '#/components/schemas/category'
-  /categories/{id}:
-    get:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the category
-      summary: Get a list of all the posts in that category
-      responses:
-        '401':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Array of the posts and comments from a category
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
+                    enum: ['error']
+                  message:
                     type: string
-                  posts: 
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/post'
-    post:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the category
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title: 
-                  type: string
-                description: 
-                  type: string
-                content: 
-                  type: string
-      summary: Add a new post in the specified category
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':
-          description: Success message
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  id:
+                    enum: ['Server error']
+                  code:
                     type: string
-                  success:
-                    type: string                   
-  /posts:
-    get:
-      security:
-        - bearerAuth: []
-      summary: Get a list of all the posts from the user
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return a list of posts
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  posts:   
-                    $ref: '#/components/schemas/post'
-  /posts/{id}:
-    get:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the post
-      summary: Return a post by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return a post object
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  post:   
-                    type: object
-                    $ref: '#/components/schemas/post'
-    put:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the post
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                title: 
-                  type: string
-                description: 
-                  type: string
-                content: 
-                  type: string
-      summary: Update a post by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the updated post
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  id:   
-                    type: string
-    delete:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the post
-      summary: Delete a post by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the deleted post
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  id:   
-                    type: string
-  /comments:
-    post:
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                postId: 
-                  type: string
-                content: 
-                  type: string
-      summary: Add a comment to the specified post
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the new comment
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  id:   
-                    type: string
-  /comments/{id}:
-    put:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the comment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                content: 
-                  type: string
-      summary: Update a comment by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the updated comment
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  id:   
-                    type: string
-    delete:
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          description: id of the comment
-      summary: Delete a comment by its id
-      responses:
-        '400':
-          description: 'Missing authorization header'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error_missing_header'
-        '200':    # status code
-          description: Return the id of the deleted comment
-          content:
-            application/json:
-              schema: 
-                type: object
-                properties:
-                  status:
-                    type: string
-                  id:   
-                    type: string
-   
+                    enum: ['ERROR_SERVER'] 
+                  
