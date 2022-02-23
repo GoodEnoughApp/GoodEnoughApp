@@ -15,7 +15,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [14.17.x]
+                node-version: [16.0.x]
 
         steps:
             - uses: actions/checkout@v2
@@ -28,6 +28,9 @@ jobs:
             - name: Run CI command
               run: yarn ci
 
+            - name: Check linting
+              run: yarn lint
+            
             - name: Run the tests
               run: yarn test
 
