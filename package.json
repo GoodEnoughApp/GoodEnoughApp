@@ -22,8 +22,8 @@
     "ci": "yarn install --frozen-lockfile",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "lint": "eslint 'src/pages/*.{js,jsx}'",
-    "lint:fix": "eslint 'src/pages/*.{js,jsx}' --fix",
+    "lint": "eslint 'src/*.{js,jsx}'",
+    "lint:fix": "eslint 'src/*/*.{js,jsx}' --fix",
     "format": "prettier --write './src/pages/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "eslintConfig": {
