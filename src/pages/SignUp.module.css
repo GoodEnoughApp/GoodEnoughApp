@@ -1,0 +1,91 @@
+.page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+.logo {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  margin: 20px auto;
+  border-radius: 16px;
+  background: #3d3d3d;
+}
+
+.page h2 {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0px;
+  color: #979797;
+  font-weight: 500;
+}
+
+.page h3 {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+  margin-top: 15px;
+  color: #979797;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.page input {
+  height: 50px;
+  margin-bottom: 25px;
+  background: #e4e8e9;
+  border: 1px solid #979797;
+  border-radius: 8px;
+  padding-left: 40px;
+}
+
+.page input:last-of-type {
+  margin-bottom: 42px;
+}
+
+.page small {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 60px;
+  font-weight: bold;
+}
+
+.page small a {
+  color: #969696;
+  text-decoration: none;
+}
+
+.page button {
+  height: 60px;
+  background: #01184f;
+  color: #fff;
+  border: 0px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.page button:disabled {
+  opacity: 0.5;
+}
+
+.page p {
+  color: #969696;
+  margin: 20px auto;
+}
+
+.page p a {
+  font-weight: bold;
+  color: #3d3d3d;
+  text-decoration: none;
+}
