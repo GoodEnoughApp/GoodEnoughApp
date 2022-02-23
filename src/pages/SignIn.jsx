@@ -8,6 +8,16 @@ export default function SignIn() {
   const onSubmit = (e) => {
     e.preventDefault();
   };
+
+  let submitBtn = <button type="submit">Sign In</button>;
+  if (!email || !password) {
+    submitBtn = (
+      <button disabled type="submit">
+        Sign In
+      </button>
+    );
+  }
+
   return (
     <div className={styles.page}>
       <form onSubmit={onSubmit}>
@@ -32,7 +42,7 @@ export default function SignIn() {
         <small>
           <Link to="/forgot-password">Forgot password</Link>
         </small>
-        <button type="submit">Sign In</button>
+        {submitBtn}
         <p>
           Don&apos;t have an account? <Link to="/signup">Register</Link>
         </p>

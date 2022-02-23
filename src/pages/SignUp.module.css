@@ -15,6 +15,7 @@
 .logo {
   width: 120px;
   height: 120px;
+  overflow: hidden;
   margin: 20px auto;
   border-radius: 16px;
   background: #3d3d3d;
@@ -23,22 +24,32 @@
 .page h2 {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 40px;
+  margin-bottom: 0px;
+  color: #979797;
+  font-weight: 500;
+}
+
+.page h3 {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 30px;
+  margin-top: 15px;
   color: #979797;
   font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .page input {
   height: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   background: #e4e8e9;
   border: 1px solid #979797;
   border-radius: 8px;
   padding-left: 40px;
 }
 
-.page input[type='password'] {
-  margin-bottom: 10px;
+.page input:last-of-type {
+  margin-bottom: 42px;
 }
 
 .page small {
@@ -62,6 +73,10 @@
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+.page button:disabled {
+  opacity: 0.5;
 }
 
 .page p {

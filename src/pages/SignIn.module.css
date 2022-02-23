@@ -16,6 +16,7 @@
   width: 120px;
   height: 120px;
   margin: 20px auto;
+  overflow: hidden;
   border-radius: 16px;
   background: #3d3d3d;
 }
@@ -62,6 +63,10 @@
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+.page button:disabled {
+  opacity: 0.5;
 }
 
 .page p {
