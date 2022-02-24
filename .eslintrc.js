@@ -21,5 +21,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-one-expression-per-line': 'off',
     'no-alert': 'off',
+    'react/prop-types': 'off',
   },
 };
