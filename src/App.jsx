@@ -12,6 +12,7 @@ import styles from './App.module.css';
 import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import ForgetPassword from './pages/ForgetPassword';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Switch>
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/forget" component={ForgetPassword} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />
           </Switch>
