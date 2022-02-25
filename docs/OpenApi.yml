@@ -299,6 +299,22 @@ paths:
                   code:
                     type: string
                     enum: ['ERROR_INVALID_CREDENTIALS']
+        '409':
+          description: 'User is not activated'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ['error']
+                  message:
+                    type: string
+                    enum: ['This user account is not activated']
+                  code:
+                    type: string
+                    enum: ['ERROR_IS_NOT_ACTIVATED']
         '422':
           description: 'Invalid or missing requirements'
           content:
