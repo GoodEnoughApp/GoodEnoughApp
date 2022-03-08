@@ -22,5 +22,11 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     'no-alert': 'off',
     'react/prop-types': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'import/prefer-default-export': 'off',
+    'react/no-unescaped-entities': 'off',
+    'consistent-return': 'off',
+    'react/jsx-no-constructed-context-values': 'off',
+    'object-curly-newline': 'off',
   },
 };
