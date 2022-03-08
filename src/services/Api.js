@@ -308,4 +308,93 @@ export default class Api {
       throw new Error(e.message);
     }
   };
+
+  getItems = async () => {
+    const url = `${this.host}/items`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  updateItem = async ({
+    itemId,
+    expirationDate,
+    initialQuantity,
+    quantity,
+    cost,
+    isUsed,
+  }) => {
+    const url = `${this.host}/items/${itemId}`;
+    try {
+      const { data } = await put(
+        url,
+        {
+          expirationDate,
+          initialQuantity,
+          quantity,
+          cost,
+          isUsed,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  getItem = async ({ id }) => {
+    const url = `${this.host}/items/${id}`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  deleteItem = async ({ id }) => {
+    const url = `${this.host}/items/${id}`;
+    try {
+      const { data } = await axios.delete(
+        url,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
 }

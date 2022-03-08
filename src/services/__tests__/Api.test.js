@@ -165,3 +165,50 @@ it.skip('Should delete a product by its id', async () => {
   const { status } = await api.deleteProduct(input);
   expect(status).toEqual('success');
 });
+
+it.skip('Should get a list of all the items', async () => {
+  const { status, items } = await api.getItems();
+  expect(status).toEqual('success');
+  expect(items).toBeDefined();
+  expect(items.length).toBeGreaterThanOrEqual(0);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const item of items) {
+    expect(item.id).toBeDefined();
+    expect(item.name).toBeDefined();
+  }
+});
+
+it.skip('Should update an item', async () => {
+  const input = {
+    itemId: '',
+    expirationDate: '2022-03-08T19:55:11.711Z',
+    initialQuantity: 0,
+    quantity: 0,
+    cost: 0,
+    isUsed: true,
+  };
+  const { status, item } = await api.updateItem(input);
+  expect(status).toEqual('success');
+  expect(item).toBeDefined();
+  expect(item.id).toBeDefined();
+  expect(item.id).toEqual(input.itemId);
+});
+
+it.skip('Should get an item by its id', async () => {
+  const input = {
+    id: '000000000',
+  };
+  const { status, item } = await api.getItem(input);
+  expect(status).toEqual('success');
+  expect(item).toBeDefined();
+  expect(item.id).toBeDefined();
+  expect(item.id).toEqual(input.id);
+});
+
+it.skip('Should delete an item by its id', async () => {
+  const input = {
+    id: '000000000',
+  };
+  const { status } = await api.deleteItem(input);
+  expect(status).toEqual('success');
+});
