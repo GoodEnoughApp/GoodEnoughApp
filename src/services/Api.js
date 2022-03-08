@@ -1,4 +1,4 @@
-import { post, get, put } from 'axios';
+import axios, { post, get, put } from 'axios';
 
 export default class Api {
   constructor(host) {
@@ -122,6 +122,184 @@ export default class Api {
           authorization: `Bearer ${this.token}`,
         },
       });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  upsertProduct = async ({ barcode }) => {
+    const url = `${this.host}/products`;
+    try {
+      const { data } = await put(
+        url,
+        {
+          barcode,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  getProducts = async () => {
+    const url = `${this.host}/products`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  upsertCustomProduct = async ({
+    barcode,
+    name,
+    alias,
+    description,
+    brand,
+    manufacturer,
+    categoryId,
+  }) => {
+    const url = `${this.host}/products/custom`;
+    try {
+      const { data } = await put(
+        url,
+        {
+          barcode,
+          name,
+          alias,
+          description,
+          brand,
+          manufacturer,
+          categoryId,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  addItem = async ({ productId, expirationDate, quantity, cost }) => {
+    const url = `${this.host}/products/${productId}`;
+    try {
+      const { data } = await post(
+        url,
+        {
+          expirationDate,
+          quantity,
+          cost,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  updateProduct = async ({
+    productId,
+    barcode,
+    name,
+    alias,
+    description,
+    brand,
+    manufacturer,
+    categoryId,
+  }) => {
+    const url = `${this.host}/products/${productId}`;
+    try {
+      const { data } = await put(
+        url,
+        {
+          barcode,
+          name,
+          alias,
+          description,
+          brand,
+          manufacturer,
+          categoryId,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  getProduct = async ({ id }) => {
+    const url = `${this.host}/products/${id}`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  deleteProduct = async ({ id }) => {
+    const url = `${this.host}/products/${id}`;
+    try {
+      const { data } = await axios.delete(
+        url,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
       return data;
     } catch (e) {
       if (e.response?.data?.message) {
