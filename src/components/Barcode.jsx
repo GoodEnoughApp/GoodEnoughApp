@@ -8,6 +8,14 @@ const CAPTURE_OPTIONS = {
   video: { facingMode: 'environment' },
 };
 
+/*
+
+const scanImageData = () => {
+  console.log('hola');
+};
+
+*/
+
 const ComponentContext = createContext({});
 
 export default function Barcode({ onFound, onCancel }) {

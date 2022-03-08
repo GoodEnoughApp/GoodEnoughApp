@@ -1,3 +1,4 @@
 reportWebVitals.js
 *.stories.jsx
 src/stories/*.jsx
+node_modules/*

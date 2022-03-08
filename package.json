@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ci": "yarn install --frozen-lockfile",
-    "storybook": "start-storybook -p 6006 -s public",
+    "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -s public",
     "lint": "eslint 'src/*.{js,jsx}'",
     "lint:fix": "eslint 'src/*/*.{js,jsx}' --fix",
@@ -64,6 +64,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
+  "resolutions": {
+    "webpack": "^5.0.0",
+    "css-loader": "^5.0.0",
+    "dotenv-webpack": "^6.0.0",
+    "html-webpack-plugin": "^5.0.0",
+    "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^5.0.0",
+    "webpack-dev-middleware": "^4.1.0",
+    "webpack-virtual-modules": "^0.4.2"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.4.19",
