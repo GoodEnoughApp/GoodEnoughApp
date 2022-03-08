@@ -1,1 +1,3 @@
 reportWebVitals.js
+*.stories.jsx
+src/stories/*.jsx

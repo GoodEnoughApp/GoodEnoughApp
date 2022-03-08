@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { Button } from './Button';
 import './header.css';
 
-export function Header({
- user, onLogin, onLogout, onCreateAccount 
-}) {
+export function Header({ user, onLogin, onLogout, onCreateAccount }) {
   return (
     <header>
       <div className="wrapper">
@@ -55,7 +53,8 @@ export function Header({
           )}
         </div>
       </div>
-         </header>;
+    </header>
+  );
 }
 
 Header.propTypes = {
