@@ -113,4 +113,21 @@ export default class Api {
       throw new Error(e.message);
     }
   };
+
+  getCategories = async () => {
+    const url = `${this.host}/categories`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
 }

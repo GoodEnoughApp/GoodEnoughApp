@@ -68,3 +68,15 @@ it.skip('Should send a forgot password request', async () => {
   const { status } = await api.forgot(input);
   expect(status).toEqual('success');
 });
+
+it.skip('Should get a list of all the categories', async () => {
+  const { status, categories } = await api.getCategories();
+  expect(status).toEqual('success');
+  expect(categories).toBeDefined();
+  expect(categories.length).toBeGreaterThan(0);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const category of categories) {
+    expect(category.id).toBeDefined();
+    expect(category.name).toBeDefined();
+  }
+});
