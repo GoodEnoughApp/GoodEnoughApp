@@ -28,5 +28,6 @@ module.exports = {
     'consistent-return': 'off',
     'react/jsx-no-constructed-context-values': 'off',
     'object-curly-newline': 'off',
+    'class-methods-use-this': 'off',
   },
 };
