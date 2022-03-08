@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-// import { scanImageData } from 'zbar.wasm';
+import { scanImageData } from 'zbar.wasm';
 import { useUserMedia } from '../hooks/user-media';
 import styles from './Barcode.module.css';
 
@@ -10,7 +10,7 @@ const CAPTURE_OPTIONS = {
 
 const ComponentContext = createContext({});
 
-export default function Barcode() {
+export default function Barcode({ onFound, onCancel }) {
   const videoRef = useRef();
   const canvasRef = useRef();
   const contentRef = useRef(null);
@@ -18,6 +18,16 @@ export default function Barcode() {
   const [videoHeight, setVideoHeight] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
   const [interval, setIntervalVariable] = useState(null);
+
+  // When the component is unmount if an interval was set we remove it
+  useEffect(
+    () => () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    },
+    [],
+  );
   useEffect(() => {
     if (!videoRef) return;
 
@@ -26,7 +36,7 @@ export default function Barcode() {
       const height = videoRef.current.offsetHeight;
       setVideoWidth(width);
       setVideoHeight(height);
-    }, 1000);
+    }, 500);
   }, [videoRef, videoRef?.current?.height]);
 
   const onClick = () => {
@@ -37,18 +47,42 @@ export default function Barcode() {
     if (isScanning && interval) {
       clearInterval(interval);
       setIsScanning(false);
-      return;
-    }
+    } else {
+      const intervl = setInterval(() => {
+        const ctx = canvasRef.current.getContext('2d');
+        ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
+        const imageData = ctx.getImageData(0, 0, videoWidth, videoHeight);
+        scanImageData(imageData)
+          .then((res) => {
+            if (res.length) {
+              const { typeName } = res[0];
+              const data = {
+                typeName,
+                barcode: res[0].decode(),
+              };
+              onFound(data);
 
-    // If it wasn't scanning i start now
-    setIntervalVariable(
-      setInterval(() => {
-        const context = canvasRef.current.getContext('2d');
-        context.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
-        setIsScanning(true);
-      }, 100),
-    );
+              clearInterval(intervl);
+              // Clear the rectangle
+              // ctx.clearRect(0, 0, videoWidth, videoHeight);
+              setIsScanning(false);
+            }
+          })
+          .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
+      }, 10);
+
+      setIntervalVariable(intervl);
+      setIsScanning(true);
+    }
   };
+
+  const style = {};
+  if (videoHeight) {
+    style.height = videoHeight;
+  }
 
   return (
     <ComponentContext.Provider
@@ -65,10 +99,12 @@ export default function Barcode() {
       <div className={styles.container}>
         <div className={styles.scanner}>
           <Content />
-
           <footer>
+            <button onClick={onCancel} type="button">
+              Cancel
+            </button>
             <button type="button" onClick={onClick}>
-              Stop
+              {isScanning ? 'Stop' : 'Scan'}
             </button>
           </footer>
         </div>
@@ -78,9 +114,15 @@ export default function Barcode() {
 }
 
 function Content() {
+  const { videoHeight } = useContext(ComponentContext);
+  const style = {};
+  if (videoHeight) {
+    style.height = videoHeight;
+  }
+
   const { contentRef } = useContext(ComponentContext);
   return (
-    <div ref={contentRef} className={styles.content}>
+    <div ref={contentRef} style={style} className={styles.content}>
       <Camera />
       <Canvas />
     </div>

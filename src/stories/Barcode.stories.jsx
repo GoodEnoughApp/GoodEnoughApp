@@ -13,17 +13,25 @@ export function Default() {
   return (
     <div
       style={{
-        width: 800,
+        width: 500,
         overflow: 'hidden',
         margin: 'auto',
         padding: 30,
         borderRadius: 16,
-        height: 500,
+        height: 300,
         background: '#eaeaea',
         marginTop: 0,
       }}
     >
-      <Barcode />
+      <Barcode
+        onCancel={() => {
+          console.log('I click the cancel button');
+        }}
+        onFound={(data) => {
+          alert(data.barcode);
+          console.log(data);
+        }}
+      />
     </div>
   );
 }
