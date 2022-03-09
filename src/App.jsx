@@ -5,6 +5,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 
+import { useState } from 'react';
 import AppContext from './AppContext';
 import styles from './App.module.css';
 
@@ -15,9 +16,19 @@ import SignUp from './pages/SignUp';
 import ForgetPassword from './pages/ForgetPassword';
 import ProductDetails from './pages/ProductDetails';
 
+import Api from './services/Api';
+
+const host = 'https://good-enough-webapp-staging.herokuapp.com';
+
 function App() {
+  const [api, setApi] = useState(new Api(host));
   return (
-    <AppContext.Provider>
+    <AppContext.Provider
+      value={{
+        api,
+        setApi,
+      }}
+    >
       <main className={styles.app}>
         <Router>
           <Switch>

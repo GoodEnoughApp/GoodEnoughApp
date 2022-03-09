@@ -9,7 +9,7 @@ export default class Api {
     this.token = token;
   };
 
-  signIn = async ({ name, email, password }) => {
+  signUp = async ({ name, email, password }) => {
     const url = `${this.host}/register`;
     try {
       const { data } = await post(url, {
@@ -27,7 +27,7 @@ export default class Api {
   };
 
   verify = async ({ email, verificationCode }) => {
-    const url = `${this.host}/verify`;
+    const url = `${this.host}/register/verify`;
     try {
       const { data } = await post(url, {
         email,

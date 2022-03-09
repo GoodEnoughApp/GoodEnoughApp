@@ -19,7 +19,7 @@ it.skip('Should register the user', async () => {
     email: 'jdoe@test.com',
     password: 'example1234',
   };
-  const { status } = await api.signIn(input);
+  const { status } = await api.signUp(input);
   expect(status).toEqual('success');
 });
 
