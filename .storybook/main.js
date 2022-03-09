@@ -11,12 +11,16 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  /*webpackFinal: async (config, { configType }) => {
+  webpackFinal: async (config, { configType }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       fs: path.resolve(__dirname, 'fsMock.js'),
     };
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      util: require.resolve('util/'),
+    };
     // config.target = 'node';
     return config;
-  },*/
+  },
 };

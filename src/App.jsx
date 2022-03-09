@@ -5,7 +5,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import AppContext from './AppContext';
 import styles from './App.module.css';
 
@@ -22,12 +22,9 @@ const host = 'https://good-enough-webapp-staging.herokuapp.com';
 
 function App() {
   const [api, setApi] = useState(new Api(host));
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      api.setToken(localStorage.getItem('token'));
-      setApi(api);
-    }
-  }, []);
+  if (localStorage.getItem('token')) {
+    api.setToken(localStorage.getItem('token'));
+  }
   return (
     <AppContext.Provider
       value={{

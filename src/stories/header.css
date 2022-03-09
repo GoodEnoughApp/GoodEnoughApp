@@ -7,7 +7,7 @@
   justify-content: space-between;
 }
 
-svg {
+/*svg {
   display: inline-block;
   vertical-align: top;
 }
@@ -23,7 +23,7 @@ h1 {
 
 button + button {
   margin-left: 10px;
-}
+}*/
 
 .welcome {
   color: #333;
