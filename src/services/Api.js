@@ -397,4 +397,108 @@ export default class Api {
       throw new Error(e.message);
     }
   };
+
+  addItemToShopping = async ({ productId, quantity, cost }) => {
+    const url = `${this.host}/shopping`;
+    try {
+      const { data } = await post(
+        url,
+        {
+          productId,
+          quantity,
+          cost,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  getShopping = async () => {
+    const url = `${this.host}/shopping`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  updateShopping = async ({ itemId, quantity, cost }) => {
+    const url = `${this.host}/shopping/${itemId}`;
+    try {
+      const { data } = await put(
+        url,
+        {
+          quantity,
+          cost,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  getShoppingItem = async ({ id }) => {
+    const url = `${this.host}/shopping/${id}`;
+    try {
+      const { data } = await get(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
+        },
+      });
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
+
+  deleteShoppingItem = async ({ id }) => {
+    const url = `${this.host}/shopping/${id}`;
+    try {
+      const { data } = await axios.delete(
+        url,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${this.token}`,
+          },
+        },
+      );
+      return data;
+    } catch (e) {
+      if (e.response?.data?.message) {
+        throw new Error(e.response?.data.message);
+      }
+      throw new Error(e.message);
+    }
+  };
 }
