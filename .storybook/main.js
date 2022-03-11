@@ -16,10 +16,6 @@ module.exports = {
       ...config.resolve.alias,
       fs: path.resolve(__dirname, 'fsMock.js'),
     };
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      util: require.resolve('util/'),
-    };
     // config.target = 'node';
     return config;
   },

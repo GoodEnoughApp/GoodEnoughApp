@@ -1,32 +1,17 @@
-import { useContext, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import AppContext from '../AppContext';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './SignUp.module.css';
 
 export default function SignUp() {
-  const history = useHistory();
   const [mode, setMode] = useState('');
-  const { api } = useContext(AppContext);
-  const [verificationEmail, setVerificationEmail] = useState(null);
   return (
     <div className={styles.page}>
       {mode ? (
-        <Verification
-          email={verificationEmail}
-          onSuccess={() => {
-            history.replace('/signin');
-          }}
-        />
+        <Verification />
       ) : (
         <Registration
-          onSend={({ name, email, password }) => {
-            api
-              .signUp({ name, email, password })
-              .then(() => {
-                setVerificationEmail(email);
-                setMode('verification');
-              })
-              .catch((err) => alert(err.message));
+          onSend={() => {
+            setMode('verification');
           }}
         />
       )}
@@ -45,7 +30,7 @@ function Registration({ onSend }) {
       alert('Passwords are different');
       return;
     }
-    onSend({ name, email, password });
+    onSend();
   };
 
   let submitBtn = <button type="submit">Sign Up</button>;
@@ -101,17 +86,10 @@ function Registration({ onSend }) {
   );
 }
 
-function Verification({ email, onSuccess }) {
-  const { api } = useContext(AppContext);
+function Verification() {
   const [verificationCode, setVerificationCode] = useState('');
   const onSubmit = (e) => {
     e.preventDefault();
-    api
-      .verify({ email, verificationCode })
-      .then(onSuccess)
-      .catch((err) => {
-        alert(err.message);
-      });
   };
 
   let submitBtn = <button type="submit">Next</button>;
@@ -130,7 +108,7 @@ function Verification({ email, onSuccess }) {
       <input
         value={verificationCode}
         onChange={(e) => setVerificationCode(e.target.value)}
-        type="text"
+        type="number"
         required
         placeholder="Insert verification code"
         title="Insert verification code"

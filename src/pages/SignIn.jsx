@@ -1,25 +1,12 @@
-import { useContext, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import AppContext from '../AppContext';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './SignIn.module.css';
 
 export default function SignIn() {
-  const history = useHistory();
-  const { api, setApi } = useContext(AppContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const onSubmit = (e) => {
     e.preventDefault();
-    api
-      .login({ email, password })
-      .then(({ authToken, expiredAt }) => {
-        api.setToken(authToken);
-        localStorage.setItem('token', authToken);
-        localStorage.setItem('expire_at', expiredAt);
-        setApi(api);
-        history.replace('/');
-      })
-      .catch((err) => alert(err.message));
   };
 
   let submitBtn = <button type="submit">Sign In</button>;
@@ -48,7 +35,6 @@ export default function SignIn() {
           required
           value={password}
           type="password"
-          minLength={8}
           placeholder="Password"
           title="Password"
           onChange={(e) => setPassword(e.target.value)}

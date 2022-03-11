@@ -6,9 +6,9 @@ info:
 servers:
   - url: http://localhost:3000
     description: Localhost 
-  - url:  https://good-enough-webapp-staging.herokuapp.com
+  - url: https://develop.random.heroku.app
     description: Develop
-  - url:  https://good-enough-webapp.herokuapp.com
+  - url: https://random.heroku.app
     description: Production
 components:
   securitySchemes:

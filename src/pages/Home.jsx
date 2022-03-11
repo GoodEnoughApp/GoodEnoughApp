@@ -1,12 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import AppContext from '../AppContext';
+import React from 'react';
 import styles from './Home.module.css';
 
 export default function Home() {
-  const { api } = useContext(AppContext);
-  if (!api.token) {
-    return null;
-  }
   return (
     <div className={styles.page}>
       <Topbar />
@@ -52,38 +47,7 @@ function BottomBar() {
 }
 
 function Content() {
-  const { api } = useContext(AppContext);
-  const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    async function getData() {
-      console.log(`Token: "${api.token}"`);
-      try {
-        setIsLoading(true);
-        const categories = await api.getCategories();
-        console.log(categories);
-        const items = await api.getItems();
-        console.log(items);
-        const products = await api.getProducts();
-
-        console.log({
-          categories,
-          products,
-          items,
-        });
-        setIsLoading(false);
-      } catch (err) {
-        alert(err.message);
-      }
-    }
-    getData();
-  }, []);
-  if (isLoading) return <Loading />;
-
   return <section>{new Array(10).fill(<Group />)}</section>;
-}
-
-function Loading() {
-  return <div>Loading</div>;
 }
 
 function Group() {
