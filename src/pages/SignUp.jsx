@@ -1,17 +1,32 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import AppContext from '../AppContext';
 import styles from './SignUp.module.css';
 
 export default function SignUp() {
+  const history = useHistory();
   const [mode, setMode] = useState('');
+  const { api } = useContext(AppContext);
+  const [verificationEmail, setVerificationEmail] = useState(null);
   return (
     <div className={styles.page}>
       {mode ? (
-        <Verification />
+        <Verification
+          email={verificationEmail}
+          onSuccess={() => {
+            history.replace('/signin');
+          }}
+        />
       ) : (
         <Registration
-          onSend={() => {
-            setMode('verification');
+          onSend={({ name, email, password }) => {
+            api
+              .signUp({ name, email, password })
+              .then(() => {
+                setVerificationEmail(email);
+                setMode('verification');
+              })
+              .catch((err) => alert(err.message));
           }}
         />
       )}
@@ -30,7 +45,7 @@ function Registration({ onSend }) {
       alert('Passwords are different');
       return;
     }
-    onSend();
+    onSend({ name, email, password });
   };
 
   let submitBtn = <button type="submit">Sign Up</button>;
@@ -43,7 +58,7 @@ function Registration({ onSend }) {
   }
   return (
     <form onSubmit={onSubmit}>
-      <img alt="logo" className={styles.logo} />
+      <img alt="logo" src="/logo512.png" className={styles.logo} />
       <h2>Let get started</h2>
       <h3>Create a new account</h3>
       <input
@@ -86,10 +101,17 @@ function Registration({ onSend }) {
   );
 }
 
-function Verification() {
+function Verification({ email, onSuccess }) {
+  const { api } = useContext(AppContext);
   const [verificationCode, setVerificationCode] = useState('');
   const onSubmit = (e) => {
     e.preventDefault();
+    api
+      .verify({ email, verificationCode })
+      .then(onSuccess)
+      .catch((err) => {
+        alert(err.message);
+      });
   };
 
   let submitBtn = <button type="submit">Next</button>;
@@ -108,7 +130,7 @@ function Verification() {
       <input
         value={verificationCode}
         onChange={(e) => setVerificationCode(e.target.value)}
-        type="number"
+        type="text"
         required
         placeholder="Insert verification code"
         title="Insert verification code"

@@ -5,16 +5,19 @@ import styles from './Barcode.module.css';
 
 const CAPTURE_OPTIONS = {
   audio: false,
-  video: { facingMode: 'environment' },
+  video: {
+    facingMode: 'environment',
+    // facingMode: 'user',
+    /* 
+    width: { exact: 1080 },
+    height: { exact: 720 },
+    */
+    frameRate: {
+      ideal: 60,
+      min: 10,
+    },
+  },
 };
-
-/*
-
-const scanImageData = () => {
-  console.log('hola');
-};
-
-*/
 
 const ComponentContext = createContext({});
 
@@ -33,18 +36,21 @@ export default function Barcode({ onFound, onCancel }) {
       if (interval) {
         clearInterval(interval);
       }
+      if (videoRef?.current) {
+        videoRef.current.stop();
+      }
     },
     [],
   );
   useEffect(() => {
-    if (!videoRef) return;
+    if (!videoRef || !videoRef.current) return;
 
     setTimeout(() => {
       const width = videoRef.current.offsetWidth;
       const height = videoRef.current.offsetHeight;
       setVideoWidth(width);
       setVideoHeight(height);
-    }, 500);
+    }, 1000);
   }, [videoRef, videoRef?.current?.height]);
 
   const onClick = () => {
@@ -57,6 +63,7 @@ export default function Barcode({ onFound, onCancel }) {
       setIsScanning(false);
     } else {
       const intervl = setInterval(() => {
+        if (!canvasRef || !canvasRef.current) return;
         const ctx = canvasRef.current.getContext('2d');
         ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
         const imageData = ctx.getImageData(0, 0, videoWidth, videoHeight);
@@ -68,6 +75,7 @@ export default function Barcode({ onFound, onCancel }) {
                 typeName,
                 barcode: res[0].decode(),
               };
+              // console.log(data);
               onFound(data);
 
               clearInterval(intervl);
@@ -102,6 +110,7 @@ export default function Barcode({ onFound, onCancel }) {
         videoHeight,
         setVideoHeight,
         setVideoWidth,
+        isScanning,
       }}
     >
       <div className={styles.container}>
@@ -122,7 +131,7 @@ export default function Barcode({ onFound, onCancel }) {
 }
 
 function Content() {
-  const { videoHeight } = useContext(ComponentContext);
+  const { videoHeight, isScanning } = useContext(ComponentContext);
   const style = {};
   if (videoHeight) {
     style.height = videoHeight;
@@ -133,6 +142,7 @@ function Content() {
     <div ref={contentRef} style={style} className={styles.content}>
       <Camera />
       <Canvas />
+      {isScanning ? null : <Message />}
     </div>
   );
 }
@@ -163,4 +173,12 @@ function Camera() {
 function Canvas() {
   const { canvasRef, videoWidth, videoHeight } = useContext(ComponentContext);
   return <canvas height={videoHeight} width={videoWidth} ref={canvasRef} />;
+}
+
+function Message() {
+  return (
+    <div className={styles.message}>
+      Click <strong>Scan</strong> to start scanning
+    </div>
+  );
 }

@@ -6,11 +6,21 @@
   align-items: center;
 }
 
+/* BUG Example */
+
 .page form {
   display: flex;
   flex-direction: column;
   width: 90%;
   height: 90%;
+}
+
+.page form button {
+  cursor: pointer;
+}
+
+.page form button:disabled {
+  cursor: not-allowed;
 }
 
 .page button {

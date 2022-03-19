@@ -8,6 +8,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'airbnb',
+    'eslint-config-prettier',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -16,7 +17,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react'],
+  plugins: ['react', 'prettier'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-one-expression-per-line': 'off',
@@ -28,5 +29,9 @@ module.exports = {
     'consistent-return': 'off',
     'react/jsx-no-constructed-context-values': 'off',
     'object-curly-newline': 'off',
+    'no-param-reassign': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
+    'no-restricted-syntax': 'off',
+    'no-restricted-globals': 'off',
   },
 };

@@ -4,7 +4,10 @@
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 2.3fr 60px;
+  grid-template-rows: 60px 1fr calc(
+      var(--bottom-bar-height) +
+        env(safe-area-inset-bottom, var(--safe-area-inset))
+    );
   gap: 0px 0px;
   grid-template-areas:
     '.'
@@ -46,34 +49,6 @@
 
 .page section {
   overflow: scroll;
-}
-
-.page footer {
-  border-top: 1px solid #c3c3c3;
-  padding: 0px 20px;
-}
-
-.page footer nav {
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.page footer nav > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.page footer nav img {
-  width: 24px;
-  height: 24px;
-  background: #3d3d3d;
-  overflow: hidden;
-  border-radius: 4px;
-  color: transparent; /*To hide the alt text*/
 }
 
 .group {
@@ -148,11 +123,30 @@
   align-items: center;
 }
 
-.group .item .actions img {
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: #3d3d3d;
-  color: transparent;
+.group .item .actions button,
+.page .topbar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.group .item .actions button svg {
+  stroke: #c8dee5;
+  transition: stroke ease-out 200ms;
+}
+
+.page .topbar button svg {
+  stroke: #012c63;
+}
+
+.group .item .actions button:hover svg {
+  stroke: #06b0db;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .page {
+    grid-template-rows: 60px 1fr calc(
+        var(--bottom-bar-height) + var(--safe-area-inset)
+      );
+  }
 }

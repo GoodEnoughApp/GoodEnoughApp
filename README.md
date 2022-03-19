@@ -1,6 +1,7 @@
 # Good Enough
 
 ## Structure
+
 Anything related to the application is located in the `src/` directory, the main directories are:
 
 | Directories   | Description                                                                                                                           |
