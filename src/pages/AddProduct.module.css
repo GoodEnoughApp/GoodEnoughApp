@@ -2,18 +2,26 @@
   width: 100%;
   height: 100%;
 }
+
+.loading {
+  width: 100%;
+  height: 100%;
+}
+
 .page {
   width: 100%;
   height: 100%;
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 2.3fr 60px;
+  grid-template-rows: 60px 1fr;
   gap: 0px 0px;
   grid-template-areas:
     '.'
-    '.'
     '.';
+}
+
+.page form {
 }
 
 .page .topbar {
@@ -55,7 +63,16 @@
 }
 
 .page section input {
-  width: 150px;
+  height: 24px;
+  padding: 4px;
+}
+.page section select {
+  width: 180px;
+}
+
+.page section input,
+.page section textarea {
+  width: 170px;
 }
 
 .options {
@@ -89,16 +106,16 @@
   margin-bottom: 30px;
 }
 
-.actions button {
-  color: blue;
+.topbar button {
+  color: #0360ae;
   font-weight: bold;
   height: 60px;
-  width: 100%;
   background: transparent;
-  border: 1px solid #c3c3c3;
+  border: none;
+  cursor: pointer;
 }
 
-.actions button:last-of-type {
-  color: red;
-  border-top: 0px;
+.topbar button:disabled {
+  color: #c8dee5;
+  cursor: not-allowed;
 }

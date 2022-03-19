@@ -10,6 +10,10 @@
   padding: 0px;
 }
 
+.container button {
+  cursor: pointer;
+}
+
 .scanner {
   width: 50%;
   border-radius: 8px;

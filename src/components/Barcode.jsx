@@ -32,7 +32,7 @@ export default function Barcode({ onFound, onCancel }) {
     [],
   );
   useEffect(() => {
-    if (!videoRef) return;
+    if (!videoRef || !videoRef.current) return;
 
     setTimeout(() => {
       const width = videoRef.current.offsetWidth;

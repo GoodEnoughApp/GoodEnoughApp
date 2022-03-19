@@ -1,8 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import React, { useEffect, useContext, useState, createContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import AppContext from '../AppContext';
+import Icon from '../components/Icon';
 import Loading from '../components/Loading';
+import BottomBar from '../components/BottomBar';
 import styles from './Home.module.css';
+
+const ViewContext = createContext({});
 
 export default function Home() {
   const history = useHistory();
@@ -16,7 +20,6 @@ export default function Home() {
 
     const fetchData = async () => {
       setIsLoading(true);
-      console.log(`In here i fetch the remote data`);
       let { products } = await api.getProducts();
       products = products.reduce((acc, product) => {
         const { id } = product;
@@ -26,20 +29,22 @@ export default function Home() {
 
       const groupMap = {};
       const { items } = await api.getItems();
-      items.forEach((item) => {
-        const expirationDate = item.expiration_date;
-        const productId = item.product_id;
-        if (!groupMap[expirationDate]) {
-          groupMap[expirationDate] = [];
-        }
+      items
+        .filter((i) => !i.is_used)
+        .forEach((item) => {
+          const expirationDate = item.expiration_date;
+          const productId = item.product_id;
+          if (!groupMap[expirationDate]) {
+            groupMap[expirationDate] = [];
+          }
 
-        const product = products.get(productId);
+          const product = products.get(productId);
 
-        item.product = product;
-        item.title = product.name;
+          item.product = product;
+          item.title = product.name;
 
-        groupMap[expirationDate].push(item);
-      });
+          groupMap[expirationDate].push(item);
+        });
 
       const data = [];
       const expirationDates = Object.keys(groupMap).sort(
@@ -53,57 +58,56 @@ export default function Home() {
         }),
       );
       setGroups(data);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
+      setIsLoading(false);
     };
 
     fetchData();
   }, []);
 
+  const setItemAsUsed = ({ id, groupId }) => {
+    setGroups(
+      [...groups].map((group) => {
+        if (group.id === groupId) {
+          group.items = group.items.filter((i) => i.id !== id);
+        }
+        return group;
+      }),
+    );
+  };
+
   return (
-    <div className={styles.page}>
-      <Topbar />
-      <Content isLoading={isLoading} groups={groups} />
-      <BottomBar />
-    </div>
+    <ViewContext.Provider
+      value={{
+        setItemAsUsed,
+        api,
+      }}
+    >
+      <div className={styles.page}>
+        <Topbar />
+        <Content isLoading={isLoading} groups={groups} />
+        <BottomBar selected="home" />
+      </div>
+    </ViewContext.Provider>
   );
 }
 
 function Topbar() {
+  const history = useHistory();
   return (
     <header className={styles.topbar}>
-      <div>
-        <img alt="Details" />
-      </div>
+      <div />
       <div>Home</div>
       <div>
-        <Link to="/new">
-          <img alt="Add" />
-        </Link>
+        <button
+          type="button"
+          onClick={() => {
+            history.push('/new');
+          }}
+        >
+          <Icon name="plus" />
+        </button>
       </div>
     </header>
-  );
-}
-
-function BottomBar() {
-  return (
-    <footer>
-      <nav>
-        <div>
-          <img alt="Home" title="Home" />
-          <span>Home</span>
-        </div>
-        <div>
-          <img alt="Shopping List" title="Shopping List" />
-          <span>Shopping</span>
-        </div>
-        <div>
-          <img alt="Settings" title="Settings" />
-          <span>Settings</span>
-        </div>
-      </nav>
-    </footer>
   );
 }
 
@@ -125,6 +129,7 @@ function Content({ isLoading, groups }) {
 }
 
 function Group({ id, title, items }) {
+  if (!items.length) return null;
   return (
     <div className={styles.group} id={`group-${id}`}>
       <div className={styles.title}>
@@ -132,14 +137,49 @@ function Group({ id, title, items }) {
       </div>
       <div className={styles.items}>
         {items.map((item) => (
-          <Item key={item.id} {...item} />
+          <Item
+            key={item.id}
+            groupId={id}
+            expirationDate={item.expiration_date}
+            {...item}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function Item({ id, title, quantity, cost }) {
+function Item({ id, title, quantity, cost, groupId, expirationDate, product }) {
+  const { setItemAsUsed, api } = useContext(ViewContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const onClick = async () => {
+    if (
+      !confirm(`Are you sure you want to set the product "${title}" as used`)
+    ) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await api.updateItem({
+        itemId: id,
+        expirationDate,
+        initialQuantity: quantity,
+        quantity,
+        cost,
+        isUsed: true,
+      });
+      await api.addItemToShopping({
+        productId: product.id,
+        quantity,
+        cost,
+      });
+      alert('Product was added to the shopping list');
+      setItemAsUsed({ id, groupId });
+    } catch (e) {
+      alert(e.message);
+      setIsLoading(false);
+    }
+  };
   return (
     <div id={id} className={styles.item}>
       <div className={styles.image}>
@@ -154,7 +194,9 @@ function Item({ id, title, quantity, cost }) {
         </div>
       </div>
       <div className={styles.actions}>
-        <img alt="check" />
+        <button type="button" disabled={isLoading} onClick={onClick}>
+          <Icon name="check-square" />
+        </button>
       </div>
     </div>
   );
