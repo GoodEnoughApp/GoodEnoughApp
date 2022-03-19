@@ -37,8 +37,6 @@ export default function AddProduct() {
 
         response = await api.upsertProduct({ barcode });
 
-        console.log(`Response`, response);
-
         // Create custom product
         if (response.productId === null) {
           setProduct({
@@ -242,7 +240,6 @@ function CustomProduct() {
                 id="product-category"
                 value={categoryId}
                 onChange={(e) => {
-                  console.log(`Category change: ${e.target.value}`);
                   setCategoryId(e.target.value);
                 }}
               >
@@ -321,13 +318,6 @@ function Product({ product }) {
   const onSave = async (evt) => {
     evt.preventDefault();
     try {
-      console.log(`I send this to add an item`);
-      console.log({
-        productId: id,
-        quantity,
-        expirationDate,
-        cost,
-      });
       const { status } = await api.addItem({
         productId: id,
         expirationDate,
