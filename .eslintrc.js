@@ -29,5 +29,8 @@ module.exports = {
     'consistent-return': 'off',
     'react/jsx-no-constructed-context-values': 'off',
     'object-curly-newline': 'off',
+    'no-param-reassign': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
+    'no-restricted-syntax': 'off',
   },
 };

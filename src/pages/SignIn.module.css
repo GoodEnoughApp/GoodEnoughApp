@@ -12,6 +12,14 @@
   width: 90%;
 }
 
+.page form button {
+  cursor: pointer;
+}
+
+.page form button:disabled {
+  cursor: not-allowed;
+}
+
 .logo {
   width: 120px;
   height: 120px;

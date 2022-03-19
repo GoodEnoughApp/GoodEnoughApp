@@ -8,14 +8,6 @@ const CAPTURE_OPTIONS = {
   video: { facingMode: 'environment' },
 };
 
-/*
-
-const scanImageData = () => {
-  console.log('hola');
-};
-
-*/
-
 const ComponentContext = createContext({});
 
 export default function Barcode({ onFound, onCancel }) {
@@ -32,6 +24,9 @@ export default function Barcode({ onFound, onCancel }) {
     () => () => {
       if (interval) {
         clearInterval(interval);
+      }
+      if (videoRef?.current) {
+        videoRef.current.stop();
       }
     },
     [],
@@ -68,6 +63,7 @@ export default function Barcode({ onFound, onCancel }) {
                 typeName,
                 barcode: res[0].decode(),
               };
+              console.log(data);
               onFound(data);
 
               clearInterval(intervl);
@@ -102,6 +98,7 @@ export default function Barcode({ onFound, onCancel }) {
         videoHeight,
         setVideoHeight,
         setVideoWidth,
+        isScanning,
       }}
     >
       <div className={styles.container}>
@@ -122,7 +119,7 @@ export default function Barcode({ onFound, onCancel }) {
 }
 
 function Content() {
-  const { videoHeight } = useContext(ComponentContext);
+  const { videoHeight, isScanning } = useContext(ComponentContext);
   const style = {};
   if (videoHeight) {
     style.height = videoHeight;
@@ -133,6 +130,7 @@ function Content() {
     <div ref={contentRef} style={style} className={styles.content}>
       <Camera />
       <Canvas />
+      {isScanning ? null : <Message />}
     </div>
   );
 }
@@ -163,4 +161,12 @@ function Camera() {
 function Canvas() {
   const { canvasRef, videoWidth, videoHeight } = useContext(ComponentContext);
   return <canvas height={videoHeight} width={videoWidth} ref={canvasRef} />;
+}
+
+function Message() {
+  return (
+    <div className={styles.message}>
+      Click <strong>Scan</strong> to start scanning
+    </div>
+  );
 }

@@ -74,11 +74,10 @@ it.skip('Should get a list of all the categories', async () => {
   expect(status).toEqual('success');
   expect(categories).toBeDefined();
   expect(categories.length).toBeGreaterThan(0);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const category of categories) {
+  categories.forEach((category) => {
     expect(category.id).toBeDefined();
     expect(category.name).toBeDefined();
-  }
+  });
 });
 
 it.skip('Should upsert a product', async () => {
@@ -95,11 +94,10 @@ it.skip('Should get a list of products', async () => {
   expect(status).toEqual('success');
   expect(products).toBeDefined();
   expect(products.length).toBeGreaterThan(0);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const product of products) {
+  products.forEach((product) => {
     expect(product.id).toBeDefined();
     expect(product.name).toBeDefined();
-  }
+  });
 });
 
 it.skip('Should upsert a custom product', async () => {
@@ -171,11 +169,9 @@ it.skip('Should get a list of all the items', async () => {
   expect(status).toEqual('success');
   expect(items).toBeDefined();
   expect(items.length).toBeGreaterThanOrEqual(0);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const item of items) {
+  items.forEach((item) => {
     expect(item.id).toBeDefined();
-    expect(item.name).toBeDefined();
-  }
+  });
 });
 
 it.skip('Should update an item', async () => {
@@ -231,10 +227,9 @@ it.skip('Should get a list of all the items in the shopping list', async () => {
   expect(status).toEqual('success');
   expect(items).toBeDefined();
   expect(items.length).toBeGreaterThanOrEqual(0);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const item of items) {
+  items.forEach((item) => {
     expect(item.id).toBeDefined();
-  }
+  });
 });
 
 it.skip('Should update an item in the shopping list', async () => {

@@ -359,7 +359,8 @@ paths:
                   name:
                     type: string
                   email:
-                    type: integer
+                    type: string
+                    format: email
                   expiredAt:
                     description: Date time when the token expired
                     type: string
@@ -703,6 +704,11 @@ paths:
                 categoryId:
                   type: string 
                   format: uuid
+                barcode_type:
+                  type: string 
+                  enum:
+                    - UPC
+                    - EAN
       responses:
         '200':
           description: Success
@@ -1237,6 +1243,18 @@ paths:
     get:
       summary: Get a list of all the items
       parameters:
+        - in: query
+          name: startDate   
+          description: The beginning of the expiration date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate   
+          description: The end of the expiration date
+          schema:
+            type: string
+            format: date
         - in: query
           name: productId   
           description: Filter items by the product

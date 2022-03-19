@@ -133,6 +133,7 @@ export default class Api {
 
   upsertProduct = async ({ barcode }) => {
     const url = `${this.host}/products`;
+
     try {
       const { data } = await put(
         url,

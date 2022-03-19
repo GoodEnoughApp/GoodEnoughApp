@@ -18,6 +18,23 @@
 
 .scanner .content {
   position: relative;
+  overflow: hidden;
+}
+
+.scanner .content .message {
+  position: absolute;
+  top: 0;
+  background: #fff;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scanner .content .message strong {
+  margin: 0px 8px;
 }
 
 .scanner video {
@@ -43,9 +60,10 @@
 .scanner footer {
   display: flex;
   justify-content: center;
-  align-items: cen;
+  align-items: center;
   height: 42px;
   border-top: 1px solid #c4c4c4;
+  z-index: 99;
 }
 
 .scanner footer button {
@@ -53,6 +71,7 @@
   border: 0;
   margin: 0;
   width: 50%;
+  height: 100%;
 }
 
 .scanner footer button:first-of-type {
