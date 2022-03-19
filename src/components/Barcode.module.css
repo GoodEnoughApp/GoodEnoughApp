@@ -81,3 +81,9 @@
 .scanner footer button:first-of-type {
   border-right: 1px solid #c4c4c4;
 }
+
+@media only screen and (max-width: 640px) {
+  .scanner {
+    width: 100%;
+  }
+}

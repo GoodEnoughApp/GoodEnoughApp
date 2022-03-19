@@ -58,7 +58,7 @@ function Registration({ onSend }) {
   }
   return (
     <form onSubmit={onSubmit}>
-      <img alt="logo" className={styles.logo} />
+      <img alt="logo" src="/logo512.png" className={styles.logo} />
       <h2>Let get started</h2>
       <h3>Create a new account</h3>
       <input

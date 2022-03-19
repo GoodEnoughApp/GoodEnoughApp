@@ -1,6 +1,7 @@
 .bar {
   border-top: 1px solid #c3c3c3;
   padding: 0px 20px;
+  padding-bottom: env(safe-area-inset-bottom, 20px);
 }
 
 .bar nav {
@@ -43,4 +44,10 @@
 .bar nav > button.selected span {
   color: #012c63;
   font-weight: 600;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bar {
+    padding-bottom: var(--safe-area-inset);
+  }
 }

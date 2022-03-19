@@ -4,7 +4,10 @@
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 2.3fr 60px;
+  grid-template-rows: 60px 1fr calc(
+      var(--bottom-bar-height) +
+        env(safe-area-inset-bottom, var(--safe-area-inset))
+    );
   gap: 0px 0px;
   grid-template-areas:
     '.'
@@ -138,4 +141,12 @@
 
 .group .item .actions button:hover svg {
   stroke: #06b0db;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .page {
+    grid-template-rows: 60px 1fr calc(
+        var(--bottom-bar-height) + var(--safe-area-inset)
+      );
+  }
 }

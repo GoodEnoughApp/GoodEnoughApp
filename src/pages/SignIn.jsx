@@ -34,7 +34,7 @@ export default function SignIn() {
   return (
     <div className={styles.page}>
       <form onSubmit={onSubmit}>
-        <img alt="logo" className={styles.logo} />
+        <img alt="logo" src="/logo512.png" className={styles.logo} />
         <h2>Welcome to GoodEnough</h2>
         <input
           required

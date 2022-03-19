@@ -5,7 +5,18 @@ import styles from './Barcode.module.css';
 
 const CAPTURE_OPTIONS = {
   audio: false,
-  video: { facingMode: 'environment' },
+  video: {
+    facingMode: 'environment',
+    // facingMode: 'user',
+    /* 
+    width: { exact: 1080 },
+    height: { exact: 720 },
+    */
+    frameRate: {
+      ideal: 60,
+      min: 10,
+    },
+  },
 };
 
 const ComponentContext = createContext({});
@@ -32,6 +43,14 @@ export default function Barcode({ onFound, onCancel }) {
     [],
   );
   useEffect(() => {
+    console.log(`I got this function`);
+    console.log(scanImageData);
+    navigator.mediaDevices.enumerateDevices().then((response) => {
+      console.log(`Media devices`);
+      console.log(response);
+    });
+  }, []);
+  useEffect(() => {
     if (!videoRef || !videoRef.current) return;
 
     setTimeout(() => {
@@ -39,7 +58,7 @@ export default function Barcode({ onFound, onCancel }) {
       const height = videoRef.current.offsetHeight;
       setVideoWidth(width);
       setVideoHeight(height);
-    }, 500);
+    }, 1000);
   }, [videoRef, videoRef?.current?.height]);
 
   const onClick = () => {
@@ -52,6 +71,7 @@ export default function Barcode({ onFound, onCancel }) {
       setIsScanning(false);
     } else {
       const intervl = setInterval(() => {
+        if (!canvasRef || !canvasRef.current) return;
         const ctx = canvasRef.current.getContext('2d');
         ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
         const imageData = ctx.getImageData(0, 0, videoWidth, videoHeight);
@@ -140,6 +160,10 @@ function Camera() {
   const mediaStream = useUserMedia(CAPTURE_OPTIONS);
 
   if (mediaStream && videoRef.current && !videoRef.current.srcObject) {
+    const track = mediaStream.getVideoTracks()[0];
+    console.log(`Track`, track);
+    const capabilities = track.getCapabilities();
+    console.log(`Capabilities`, capabilities);
     videoRef.current.srcObject = mediaStream;
   }
 
