@@ -17,6 +17,17 @@ export default function SignIn() {
         localStorage.setItem('token', authToken);
         localStorage.setItem('expire_at', expiredAt);
         setApi(api);
+        return api.me();
+      })
+      .then(({ userId, name }) => {
+        localStorage.setItem(
+          'me',
+          JSON.stringify({
+            userId,
+            name,
+            email,
+          }),
+        );
         history.replace('/');
       })
       .catch((err) => alert(err.message));

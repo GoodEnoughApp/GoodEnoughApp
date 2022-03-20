@@ -48,6 +48,6 @@
 
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .bar {
-    padding-bottom: var(--safe-area-inset);
+    padding-bottom: env(safe-area-inset-bottom, 20px);
   }
 }

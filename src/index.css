@@ -21,4 +21,6 @@ code {
 :root {
   --safe-area-inset: 20px;
   --bottom-bar-height: 50px;
+
+  --color-red: rgb(255, 55, 95);
 }
