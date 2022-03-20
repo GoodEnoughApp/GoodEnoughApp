@@ -14,6 +14,7 @@ import Home from './pages/Home';
 import AddProduct from './pages/AddProduct';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import Settings from './pages/Settings';
 import ForgetPassword from './pages/ForgetPassword';
 import ProductDetails from './pages/ProductDetails';
 
@@ -43,6 +44,7 @@ function App() {
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/forget" component={ForgetPassword} />
             <Route exact path="/new" component={AddProduct} />
+            <Route exact path="/settings" component={Settings} />
             <Route exact path="/products/:id" component={ProductDetails} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />
