@@ -132,6 +132,7 @@
 
 .group .item .actions button svg {
   stroke: #c8dee5;
+  transition: stroke ease-out 200ms;
 }
 
 .page .topbar button svg {
@@ -140,57 +141,6 @@
 
 .group .item .actions button:hover svg {
   stroke: #06b0db;
-}
-
-.empty {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.empty small {
-  font-weight: bold;
-  color: rgb(200, 222, 229);
-}
-
-.empty .penguin {
-  width: 25vh;
-  margin-bottom: 30px;
-}
-
-.empty .penguin svg path {
-  fill: rgb(200, 222, 229);
-}
-
-.empty .penguin svg path.eye,
-.empty .penguin svg path.mouth {
-  animation: eye-move 2s infinite;
-}
-
-@keyframes eye-move {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(15px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-@keyframes breath {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
 }
 
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
