@@ -84,7 +84,10 @@ export default function Home() {
     >
       <div className={styles.page}>
         <Topbar />
-        <Content isLoading={isLoading} groups={groups} />
+        <Content
+          isLoading={isLoading}
+          groups={groups.filter((g) => !!g.items.length)}
+        />
         <BottomBar selected="home" />
       </div>
     </ViewContext.Provider>

@@ -40,17 +40,17 @@ export default function BottomBar({ selected }) {
         </button>
         <button
           type="button"
-          disabled={selected === 'settings'}
+          disabled={selected === 'profile'}
           onClick={() => {
-            history.replace('/settings');
+            history.replace('/profile');
           }}
-          className={selected === 'settings' ? styles.selected : null}
+          className={selected === 'profile' ? styles.selected : null}
         >
           <Icon
-            name="settings"
-            color={selected === 'settings' ? selectedColor : unSelectedColor}
+            name="user"
+            color={selected === 'profile' ? selectedColor : unSelectedColor}
           />
-          <span>Settings</span>
+          <span>Profile</span>
         </button>
       </nav>
     </footer>

@@ -292,15 +292,11 @@ export default class Api {
   deleteProduct = async ({ id }) => {
     const url = `${this.host}/products/${id}`;
     try {
-      const { data } = await axios.delete(
-        url,
-        {},
-        {
-          headers: {
-            authorization: `Bearer ${this.token}`,
-          },
+      const { data } = await axios.delete(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
         },
-      );
+      });
       return data;
     } catch (e) {
       if (e.response?.data?.message) {
@@ -381,15 +377,11 @@ export default class Api {
   deleteItem = async ({ id }) => {
     const url = `${this.host}/items/${id}`;
     try {
-      const { data } = await axios.delete(
-        url,
-        {},
-        {
-          headers: {
-            authorization: `Bearer ${this.token}`,
-          },
+      const { data } = await axios.delete(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
         },
-      );
+      });
       return data;
     } catch (e) {
       if (e.response?.data?.message) {
@@ -485,15 +477,11 @@ export default class Api {
   deleteShoppingItem = async ({ id }) => {
     const url = `${this.host}/shopping/${id}`;
     try {
-      const { data } = await axios.delete(
-        url,
-        {},
-        {
-          headers: {
-            authorization: `Bearer ${this.token}`,
-          },
+      const { data } = await axios.delete(url, {
+        headers: {
+          authorization: `Bearer ${this.token}`,
         },
-      );
+      });
       return data;
     } catch (e) {
       if (e.response?.data?.message) {

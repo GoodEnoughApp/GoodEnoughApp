@@ -51,32 +51,12 @@
   overflow: scroll;
 }
 
-.group {
+.items {
   display: flex;
   flex-direction: column;
 }
 
-.group .title {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  padding-left: 20px;
-  border: 1px solid #c3c3c3;
-  border-top: 0px;
-}
-
-.group .title h4 {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-
-.group .items {
-  display: flex;
-  flex-direction: column;
-}
-
-.group .item {
+.item {
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 60px 1fr 100px;
@@ -87,13 +67,13 @@
   border-bottom: 1px solid #c3c3c3;
 }
 
-.group .item .image {
+.item .image {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.group .item .image img {
+.item .image img {
   width: 40px;
   height: 40px;
   overflow: hidden;
@@ -102,9 +82,11 @@
   color: transparent;
 }
 
-.group .item .content {
+.item .content {
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: #01184f;
 }
 
 .item .content h5 {
@@ -116,23 +98,22 @@
   font-style: normal;
 }
 
-.group .item .actions {
+.item .actions {
   display: flex;
   justify-content: flex-end;
   padding-right: 10px;
   align-items: center;
 }
 
-.group .item .actions button,
+.item .actions button,
 .page .topbar button {
   background: none;
   border: none;
   cursor: pointer;
 }
 
-.group .item .actions button svg {
+.item .actions button svg {
   stroke: #c8dee5;
-  transition: stroke ease-out 200ms;
 }
 
 .page .topbar button svg {
@@ -141,6 +122,48 @@
 
 .group .item .actions button:hover svg {
   stroke: #06b0db;
+}
+
+.empty {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.empty small {
+  font-weight: bold;
+  color: rgb(200, 222, 229);
+}
+
+.empty .whale {
+  width: 25vh;
+  margin-bottom: 30px;
+}
+
+.empty .whale svg {
+  overflow: visible;
+}
+
+.empty .whale svg path {
+  fill: rgb(200, 222, 229);
+  animation: move 2s infinite;
+}
+
+@keyframes move {
+  0% {
+    transform: translateY(-25px);
+    fill: rgb(200, 222, 229, 1);
+  }
+  50% {
+    transform: translateY(25px);
+    fill: rgb(200, 222, 229, 0.5);
+  }
+  100% {
+    transform: translateY(-25px);
+    fill: rgb(200, 222, 229, 1);
+  }
 }
 
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
