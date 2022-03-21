@@ -15,6 +15,8 @@ import AddProduct from './pages/AddProduct';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Settings from './pages/Settings';
+import Shopping from './pages/Shopping';
+import ShoppingItem from './pages/ShoppingItem';
 import ForgetPassword from './pages/ForgetPassword';
 import ProductDetails from './pages/ProductDetails';
 
@@ -42,9 +44,11 @@ function App() {
           <Switch>
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signin" component={SignIn} />
-            <Route exact path="/forget" component={ForgetPassword} />
+            <Route exact path="/forget-password" component={ForgetPassword} />
             <Route exact path="/new" component={AddProduct} />
-            <Route exact path="/settings" component={Settings} />
+            <Route exact path="/shopping" component={Shopping} />
+            <Route exact path="/shopping/:id" component={ShoppingItem} />
+            <Route exact path="/profile" component={Settings} />
             <Route exact path="/products/:id" component={ProductDetails} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />

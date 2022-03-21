@@ -65,7 +65,7 @@ export default function SignIn() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <small>
-          <Link to="/forgot-password">Forgot password</Link>
+          <Link to="/forget-password">Forgot password</Link>
         </small>
         {submitBtn}
         <p>

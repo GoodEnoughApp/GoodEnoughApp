@@ -19,7 +19,7 @@ export default function Settings() {
     <div className={styles.page}>
       <Topbar />
       <Content me={me} />
-      <BottomBar selected="settings" />
+      <BottomBar selected="profile" />
     </div>
   );
 }
@@ -28,7 +28,7 @@ function Topbar() {
   return (
     <header className={styles.topbar}>
       <div />
-      <div>Settings</div>
+      <div>Profile</div>
       <div />
     </header>
   );

@@ -8,6 +8,8 @@ const validNames = [
   'check-square',
   'plus',
   'chevron-left',
+  'share',
+  'user',
 ];
 export default function Icon({ name, color }) {
   switch (name) {
@@ -23,6 +25,10 @@ export default function Icon({ name, color }) {
       return <Plus color={color} />;
     case 'chevron-left':
       return <ChevronLeft color={color} />;
+    case 'share':
+      return <Share color={color} />;
+    case 'user':
+      return <User color={color} />;
     default:
       return null;
   }
@@ -154,6 +160,47 @@ function ChevronLeft({ color }) {
       className={`feather feather-chevron-left ${styles.icon}`}
     >
       <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
+function Share({ color }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="feather feather-share"
+    >
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+      <polyline points="16 6 12 2 8 6" />
+      <line x1="12" y1="2" x2="12" y2="15" />
+    </svg>
+  );
+}
+
+function User({ color }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="feather feather-user"
+    >
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }

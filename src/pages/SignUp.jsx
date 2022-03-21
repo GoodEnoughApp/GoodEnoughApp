@@ -130,7 +130,9 @@ function Verification({ email, onSuccess }) {
       <input
         value={verificationCode}
         onChange={(e) => setVerificationCode(e.target.value)}
-        type="text"
+        type="number"
+        pattern="[0-9]*"
+        minLength={6}
         required
         placeholder="Insert verification code"
         title="Insert verification code"
