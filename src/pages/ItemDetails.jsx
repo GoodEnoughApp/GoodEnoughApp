@@ -221,17 +221,20 @@ function Actions() {
       return;
     }
 
-    if (!confirm('Do you want to add to the shopping list?')) return;
-
-    try {
-      await api.addItemToShopping({
-        productId: item.product.id,
-        quantity: item.quantity,
-        cost: item.cost,
-      });
-    } catch (e) {
-      alert(e.message);
+    if (confirm('Do you want to add to the shopping list?')) {
+      try {
+        await api.addItemToShopping({
+          productId: item.product.id,
+          quantity: item.quantity,
+          cost: item.cost,
+        });
+      } catch (e) {
+        alert(e.message);
+        return;
+      }
     }
+
+    history.goBack();
   };
   const onClickDelete = () => {
     if (!confirm('Are you sure you want to remove the item?')) return;
