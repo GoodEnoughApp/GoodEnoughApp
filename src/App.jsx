@@ -18,7 +18,7 @@ import Settings from './pages/Settings';
 import Shopping from './pages/Shopping';
 import ShoppingItem from './pages/ShoppingItem';
 import ForgetPassword from './pages/ForgetPassword';
-import ProductDetails from './pages/ProductDetails';
+import ItemDetails from './pages/ItemDetails';
 
 // TODO: I need to add support for ForgotPassword
 
@@ -49,7 +49,7 @@ function App() {
             <Route exact path="/shopping" component={Shopping} />
             <Route exact path="/shopping/:id" component={ShoppingItem} />
             <Route exact path="/profile" component={Settings} />
-            <Route exact path="/products/:id" component={ProductDetails} />
+            <Route exact path="/items/:id" component={ItemDetails} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />
           </Switch>

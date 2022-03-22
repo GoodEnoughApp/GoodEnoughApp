@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState, createContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import AppContext from '../AppContext';
 import Icon from '../components/Icon';
 import Loading from '../components/Loading';
@@ -288,14 +288,14 @@ function Item({ id, title, quantity, cost, groupId, expirationDate, product }) {
       <div className={styles.image}>
         <img alt="product" />
       </div>
-      <div className={styles.content}>
+      <Link to={`/items/${id}`} className={styles.content}>
         <div>
           <h5>
             {title} {quantity > 1 ? <em>(x{quantity})</em> : null}
           </h5>
           <small>${parseFloat(`${quantity * cost}`).toFixed(2)}</small>
         </div>
-      </div>
+      </Link>
       <div className={styles.actions}>
         <button type="button" disabled={isLoading} onClick={onClick}>
           <Icon name="check-square" />
