@@ -52,8 +52,6 @@ export default function ItemDetails() {
         response.item.title = product.name;
         response.item.brand = product.brand;
         response.item.product = product;
-        console.log(`Item`);
-        console.log(response.item);
         setItem(response.item);
         setQuantity(response.item.quantity);
         setCost(response.item.cost);
