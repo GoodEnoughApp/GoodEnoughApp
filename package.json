@@ -1,6 +1,6 @@
 {
   "name": "good-enough",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@storybook/testing-library": "^0.0.9",

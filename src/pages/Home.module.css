@@ -169,6 +169,20 @@
   animation: eye-move 2s infinite;
 }
 
+.expired .title h4,
+.expired-soon .title h4 {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.expired .title h4 {
+  color: var(--color-red);
+}
+
+.expired-soon .title h4 {
+  color: var(--color-orange);
+}
+
 @keyframes eye-move {
   0% {
     transform: translateY(0px);

@@ -28,4 +28,6 @@ a {
   --bottom-bar-height: 50px;
 
   --color-red: rgb(255, 55, 95);
+  --color-yellow: rgb(255, 204, 0);
+  --color-orange: rgb(255, 149, 0);
 }
