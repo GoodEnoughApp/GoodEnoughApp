@@ -7,4 +7,6 @@ const AppContext = React.createContext({
   appKey: '',
 });
 
+// TODO Example
+
 export default AppContext;

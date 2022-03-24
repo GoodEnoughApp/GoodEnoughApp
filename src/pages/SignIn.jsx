@@ -1,12 +1,36 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import AppContext from '../AppContext';
 import styles from './SignIn.module.css';
 
 export default function SignIn() {
+  const history = useHistory();
+  const { api, setApi } = useContext(AppContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const onSubmit = (e) => {
     e.preventDefault();
+    api
+      .login({ email, password })
+      .then(({ authToken, expiredAt }) => {
+        api.setToken(authToken);
+        localStorage.setItem('token', authToken);
+        localStorage.setItem('expire_at', expiredAt);
+        setApi(api);
+        return api.me();
+      })
+      .then(({ userId, name }) => {
+        localStorage.setItem(
+          'me',
+          JSON.stringify({
+            userId,
+            name,
+            email,
+          }),
+        );
+        history.replace('/');
+      })
+      .catch((err) => alert(err.message));
   };
 
   let submitBtn = <button type="submit">Sign In</button>;
@@ -21,7 +45,7 @@ export default function SignIn() {
   return (
     <div className={styles.page}>
       <form onSubmit={onSubmit}>
-        <img alt="logo" className={styles.logo} />
+        <img alt="logo" src="/logo512.png" className={styles.logo} />
         <h2>Welcome to GoodEnough</h2>
         <input
           required
@@ -35,12 +59,13 @@ export default function SignIn() {
           required
           value={password}
           type="password"
+          minLength={8}
           placeholder="Password"
           title="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <small>
-          <Link to="/forgot-password">Forgot password</Link>
+          <Link to="/forget-password">Forgot password</Link>
         </small>
         {submitBtn}
         <p>

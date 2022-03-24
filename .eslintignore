@@ -1,1 +1,5 @@
 reportWebVitals.js
+*.stories.jsx
+src/stories/*.jsx
+node_modules/*
+config-overrides.js
