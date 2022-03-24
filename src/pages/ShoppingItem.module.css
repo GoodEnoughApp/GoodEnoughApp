@@ -4,10 +4,9 @@
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 2.3fr 60px;
+  grid-template-rows: 60px 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    '.'
     '.'
     '.';
 }
@@ -31,6 +30,7 @@
 .page .topbar button {
   background: transparent;
   border: none;
+  color: #01184f;
 }
 
 .page .topbar div img {
@@ -53,6 +53,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .options {
@@ -105,4 +106,9 @@
   background: #fff;
   border: 0px;
   border-bottom: 1px solid #c3c3c3;
+}
+
+.page section input,
+.page section textarea {
+  width: 170px;
 }
