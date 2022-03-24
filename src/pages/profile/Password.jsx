@@ -13,8 +13,6 @@ export default function Password() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  console.log(`Me`, me);
-
   const onSubmit = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
