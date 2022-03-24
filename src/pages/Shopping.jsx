@@ -153,7 +153,7 @@ function Empty() {
       <div className={styles.whale}>
         <Whale />
       </div>
-      <small>You should add products to the shopping list</small>
+      <small>You don't have products in your shopping list</small>
     </div>
   );
 }

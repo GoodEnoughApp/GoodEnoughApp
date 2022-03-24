@@ -89,7 +89,7 @@
 
 .logout {
   margin-top: auto;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 
 .password a,
@@ -99,7 +99,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
+  font-size: 1rem;
   border: 0px;
   font-weight: bold;
   cursor: pointer;

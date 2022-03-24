@@ -133,8 +133,11 @@
 }
 
 .empty small {
-  font-weight: bold;
-  color: rgb(200, 222, 229);
+  font-weight: 400;
+  color: #0360ae;
+  font-size: 1rem;
+  max-width: 66vw;
+  text-align: center;
 }
 
 .empty .whale {
@@ -147,22 +150,22 @@
 }
 
 .empty .whale svg path {
-  fill: rgb(200, 222, 229);
+  fill: rgb(3, 96, 174);
   animation: move 2s infinite;
 }
 
 @keyframes move {
   0% {
     transform: translateY(-25px);
-    fill: rgb(200, 222, 229, 1);
+    fill: rgba(3, 96, 174, 1);
   }
   50% {
     transform: translateY(25px);
-    fill: rgb(200, 222, 229, 0.5);
+    fill: rgba(3, 96, 174, 0.5);
   }
   100% {
     transform: translateY(-25px);
-    fill: rgb(200, 222, 229, 1);
+    fill: rgba(3, 96, 174, 1);
   }
 }
 

@@ -5,7 +5,7 @@ import styles from './BottomBar.module.css';
 
 export default function BottomBar({ selected }) {
   const history = useHistory();
-  const selectedColor = '#012c63';
+  const selectedColor = '#0360ae';
   const unSelectedColor = '#c4c4c4';
   return (
     <footer className={styles.bar}>

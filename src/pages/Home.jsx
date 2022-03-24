@@ -135,7 +135,7 @@ function Topbar() {
             history.push('/new');
           }}
         >
-          <Icon name="plus" />
+          <Icon name="plus" color="#0360ae" />
         </button>
       </div>
     </header>
@@ -168,12 +168,19 @@ function Content({ isLoading, groups }) {
 }
 
 function Empty() {
+  const history = useHistory();
+  const onClick = () => {
+    history.push('/new');
+  };
   return (
     <div className={styles.empty}>
       <div className={styles.penguin}>
         <Penguin />
       </div>
-      <small>You don't have products you should add some</small>
+      <small>You don't have any product</small>
+      <button type="button" onClick={onClick}>
+        Add
+      </button>
     </div>
   );
 }

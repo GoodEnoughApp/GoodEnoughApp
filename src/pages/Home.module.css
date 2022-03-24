@@ -4,10 +4,7 @@
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 1fr calc(
-      var(--bottom-bar-height) +
-        env(safe-area-inset-bottom, var(--safe-area-inset))
-    );
+  grid-template-rows: 60px 1fr var(--bottom-bar-height);
   gap: 0px 0px;
   grid-template-areas:
     '.'
@@ -150,9 +147,23 @@
   flex-direction: column;
 }
 
+.empty button {
+  margin-top: 50px;
+  border: 1px solid #0360ae;
+  border-radius: 4px;
+  background: none;
+  width: 50vw;
+  font-size: 1.05rem;
+  padding: 10px;
+  color: #0360ae;
+}
+
 .empty small {
-  font-weight: bold;
-  color: rgb(200, 222, 229);
+  font-weight: 400;
+  color: #0360ae;
+  font-size: 1rem;
+  max-width: 66vw;
+  text-align: center;
 }
 
 .empty .penguin {
@@ -161,7 +172,7 @@
 }
 
 .empty .penguin svg path {
-  fill: rgb(200, 222, 229);
+  fill: #0360ae;
 }
 
 .empty .penguin svg path.eye,
@@ -188,7 +199,7 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(15px);
+    transform: translateY(25px);
   }
   100% {
     transform: translateY(0px);
