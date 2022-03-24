@@ -56,11 +56,16 @@
 
 .page input {
   height: 50px;
-  margin-bottom: 25px;
-  background: #e4e8e9;
-  border: 1px solid #979797;
+  margin-bottom: 20px;
+  border: 1px solid #c3c3c3;
   border-radius: 8px;
   padding-left: 40px;
+  transition: border ease-out 220ms;
+}
+
+.page input:focus {
+  border: 2px solid #0360ae;
+  outline: 0px;
 }
 
 .page input:last-of-type {
@@ -75,19 +80,20 @@
 }
 
 .page small a {
-  color: #969696;
+  color: #0360ae;
   text-decoration: none;
 }
 
 .page button {
   height: 60px;
-  background: #01184f;
+  background: #0360ae;
   color: #fff;
   border: 0px;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 20px;
+  transition: opacity ease-out 220ms;
 }
 
 .page button:disabled {
@@ -101,7 +107,7 @@
 
 .page p a {
   font-weight: bold;
-  color: #3d3d3d;
+  color: #0360ae;
   text-decoration: none;
 }
 

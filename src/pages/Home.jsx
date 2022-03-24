@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState, createContext } from 'react';
 import { useHistory, Link } from 'react-router-dom';
+import moment from 'moment';
 import AppContext from '../AppContext';
 import Icon from '../components/Icon';
 import Loading from '../components/Loading';
@@ -29,19 +30,27 @@ export default function Home() {
 
       const groupMap = {};
       const { items } = await api.getItems();
+      const now = moment(new Date());
+      const expiredItems = [];
       items
         .filter((i) => !i.is_used)
         .forEach((item) => {
           const expirationDate = item.expiration_date;
+          const expirationMoment = moment(expirationDate);
+          const isExpired = expirationMoment.isSameOrBefore(now, 'day');
           const productId = item.product_id;
-          if (!groupMap[expirationDate]) {
-            groupMap[expirationDate] = [];
-          }
-
           const product = products.get(productId);
 
           item.product = product;
           item.title = product.name;
+          if (isExpired) {
+            expiredItems.push(item);
+            return;
+          }
+
+          if (!groupMap[expirationDate]) {
+            groupMap[expirationDate] = [];
+          }
 
           groupMap[expirationDate].push(item);
         });
@@ -50,13 +59,32 @@ export default function Home() {
       const expirationDates = Object.keys(groupMap).sort(
         (a, b) => new Date(a) - new Date(b),
       );
-      expirationDates.forEach((expirationDate, i) =>
+      if (expiredItems.length) {
         data.push({
+          id: 'expired-items',
+          title: 'Expired',
+          isExpired: true,
+          items: expiredItems,
+        });
+      }
+      expirationDates.forEach((expirationDate, i) => {
+        const item = {
           id: i,
           title: expirationDate,
           items: groupMap[expirationDate],
-        }),
-      );
+        };
+
+        const expirationDateMoment = moment(expirationDate);
+
+        if (expirationDateMoment.diff(now, 'days') <= 7) {
+          item.title = expirationDateMoment.fromNow();
+          item.isSoonToExpired = true;
+        } else {
+          item.title = expirationDateMoment.format('MMMM Do YYYY');
+        }
+
+        data.push(item);
+      });
       setGroups(data);
       setIsLoading(false);
     };
@@ -107,7 +135,7 @@ function Topbar() {
             history.push('/new');
           }}
         >
-          <Icon name="plus" />
+          <Icon name="plus" color="#0360ae" />
         </button>
       </div>
     </header>
@@ -140,12 +168,19 @@ function Content({ isLoading, groups }) {
 }
 
 function Empty() {
+  const history = useHistory();
+  const onClick = () => {
+    history.push('/new');
+  };
   return (
     <div className={styles.empty}>
       <div className={styles.penguin}>
         <Penguin />
       </div>
-      <small>You don't have products you should add some</small>
+      <small>You don't have any product</small>
+      <button type="button" onClick={onClick}>
+        Add
+      </button>
     </div>
   );
 }
@@ -231,10 +266,17 @@ function Penguin() {
     </svg>
   );
 }
-function Group({ id, title, items }) {
+function Group({ id, title, items, isExpired, isSoonToExpired }) {
   if (!items.length) return null;
   return (
-    <div className={styles.group} id={`group-${id}`}>
+    <div
+      className={[
+        styles.group,
+        isExpired ? styles.expired : '',
+        isSoonToExpired ? styles['expired-soon'] : '',
+      ].join(' ')}
+      id={`group-${id}`}
+    >
       <div className={styles.title}>
         <h4>{title}</h4>
       </div>

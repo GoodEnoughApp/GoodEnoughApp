@@ -125,7 +125,7 @@ function Verification({ email, onSuccess }) {
 
   return (
     <form onSubmit={onSubmit} className={styles.verification}>
-      <img alt="logo" className={styles.logo} />
+      <img alt="logo" src="/logo512.png" className={styles.logo} />
       <h2>Whats the verification code</h2>
       <input
         value={verificationCode}

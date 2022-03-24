@@ -14,11 +14,12 @@ import Home from './pages/Home';
 import AddProduct from './pages/AddProduct';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
-import Settings from './pages/Settings';
+import Profile from './pages/Profile';
 import Shopping from './pages/Shopping';
 import ShoppingItem from './pages/ShoppingItem';
 import ForgetPassword from './pages/ForgetPassword';
 import ItemDetails from './pages/ItemDetails';
+import Password from './pages/profile/Password';
 
 // TODO: I need to add support for ForgotPassword
 
@@ -48,7 +49,8 @@ function App() {
             <Route exact path="/new" component={AddProduct} />
             <Route exact path="/shopping" component={Shopping} />
             <Route exact path="/shopping/:id" component={ShoppingItem} />
-            <Route exact path="/profile" component={Settings} />
+            <Route exact path="/profile/password" component={Password} />
+            <Route exact path="/profile" component={Profile} />
             <Route exact path="/items/:id" component={ItemDetails} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />

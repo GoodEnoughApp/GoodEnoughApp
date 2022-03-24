@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
-
 import styles from './AddProduct.module.css';
 import Barcode from '../components/Barcode';
 import Loading from '../components/Loading';

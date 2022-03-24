@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import BottomBar from '../components/BottomBar';
-import styles from './Settings.module.css';
+import styles from './Profile.module.css';
 
-export default function Settings() {
+export default function Profile() {
   const history = useHistory();
   const [me, setMe] = useState(null);
   useEffect(() => {
@@ -59,6 +59,11 @@ function Content({ me }) {
         <div className={`${styles.row} ${styles.info}`}>
           <div>Email</div>
           <div>{email}</div>
+        </div>
+      </div>
+      <div className={`${styles.group} ${styles.password}`}>
+        <div className={styles.row}>
+          <Link to="/profile/password">Change Password</Link>
         </div>
       </div>
       <div className={`${styles.group} ${styles.logout}`}>

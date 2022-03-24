@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import styles from './ForgetPassword.module.css';
 import AppContext from '../AppContext';
@@ -62,6 +62,10 @@ export default function ForgetPassword() {
           title="Insert your email"
           onChange={(e) => setEmail(e.target.value)}
         />
+        <small>
+          <Link to="/signin">I remember my password</Link>
+        </small>
+
         {submitBtn}
       </form>
     </div>
