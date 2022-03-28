@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   width: 90%;
+  background: white;
 }
 
 .page form button {
@@ -22,8 +23,7 @@
 
 .logo {
   width: 120px;
-  height: 120px;
-  margin: 20px auto;
+  margin: 0px auto;
   overflow: hidden;
   border-radius: 16px;
 }
@@ -91,4 +91,15 @@
   font-weight: bold;
   color: #0360ae;
   text-decoration: none;
+}
+
+@media only screen and (min-width: 480px) {
+  .page form {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    padding: 20px;
+    border-radius: 8px;
+  }
 }

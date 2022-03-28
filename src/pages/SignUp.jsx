@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import AppContext from '../AppContext';
 import styles from './SignUp.module.css';
+import { Logo } from '../components/Logo';
 
 export default function SignUp() {
   const history = useHistory();
@@ -35,6 +36,7 @@ export default function SignUp() {
 }
 
 function Registration({ onSend }) {
+  const { cursorLocation, dimensions } = useContext(AppContext);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,7 +60,9 @@ function Registration({ onSend }) {
   }
   return (
     <form onSubmit={onSubmit}>
-      <img alt="logo" src="/logo512.png" className={styles.logo} />
+      <div className={styles.logo}>
+        <Logo dimensions={dimensions} cursorLocation={cursorLocation} />
+      </div>
       <h2>Let get started</h2>
       <h3>Create a new account</h3>
       <input
@@ -102,7 +106,7 @@ function Registration({ onSend }) {
 }
 
 function Verification({ email, onSuccess }) {
-  const { api } = useContext(AppContext);
+  const { api, cursorLocation, dimensions } = useContext(AppContext);
   const [verificationCode, setVerificationCode] = useState('');
   const onSubmit = (e) => {
     e.preventDefault();
@@ -125,7 +129,9 @@ function Verification({ email, onSuccess }) {
 
   return (
     <form onSubmit={onSubmit} className={styles.verification}>
-      <img alt="logo" src="/logo512.png" className={styles.logo} />
+      <div className={styles.logo}>
+        <Logo dimensions={dimensions} cursorLocation={cursorLocation} />
+      </div>
       <h2>Whats the verification code</h2>
       <input
         value={verificationCode}
