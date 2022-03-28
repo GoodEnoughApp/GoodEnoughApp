@@ -5,7 +5,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppContext from './AppContext';
 import styles from './App.module.css';
 
@@ -28,16 +28,42 @@ import Api from './services/Api';
 const host = 'https://good-enough-webapp-staging.herokuapp.com';
 
 function App() {
+  const [dimensions, setDimensions] = useState(null);
+  const [cursorLocation, setCursorLocation] = useState(null);
   const [api, setApi] = useState(new Api(host));
   if (localStorage.getItem('token')) {
     api.setToken(localStorage.getItem('token'));
   }
+
+  useEffect(() => {
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+    window.addEventListener('resize', () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    });
+    window.addEventListener('mousemove', (e) => {
+      const { pageX, pageY, clientX, clientY } = e;
+      setCursorLocation({
+        pageX,
+        pageY,
+        clientX,
+        clientY,
+      });
+    });
+  }, []);
 
   return (
     <AppContext.Provider
       value={{
         api,
         setApi,
+        cursorLocation,
+        dimensions,
       }}
     >
       <main className={styles.app}>
