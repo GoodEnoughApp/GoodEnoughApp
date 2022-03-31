@@ -1,6 +1,8 @@
-export function Logo({ cursorLocation, dimensions }) {
+export function Logo() {
+  /*
   console.log(`Cursor location`);
   console.log({ cursorLocation, dimensions });
+  */
   return (
     <svg
       width="100%"

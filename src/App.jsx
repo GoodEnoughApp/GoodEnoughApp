@@ -27,8 +27,19 @@ import Api from './services/Api';
 
 const host = 'https://good-enough-webapp-staging.herokuapp.com';
 
+function getDeviceType(width) {
+  if (width >= 481 && width <= 768) {
+    return 'tablet';
+  }
+  if (width >= 769) {
+    return 'desktop';
+  }
+  return 'mobile';
+}
+
 function App() {
   const [dimensions, setDimensions] = useState(null);
+  const [device, setDevice] = useState(null);
   const [cursorLocation, setCursorLocation] = useState(null);
   const [api, setApi] = useState(new Api(host));
   if (localStorage.getItem('token')) {
@@ -40,6 +51,7 @@ function App() {
       width: window.innerWidth,
       height: window.innerHeight,
     });
+
     window.addEventListener('resize', () => {
       setDimensions({
         width: window.innerWidth,
@@ -57,6 +69,13 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!dimensions?.width) {
+      return;
+    }
+    setDevice(getDeviceType(dimensions?.width));
+  }, [dimensions?.width]);
+
   return (
     <AppContext.Provider
       value={{
@@ -64,6 +83,7 @@ function App() {
         setApi,
         cursorLocation,
         dimensions,
+        device,
       }}
     >
       <main className={styles.app}>
