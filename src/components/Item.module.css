@@ -1,0 +1,105 @@
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
+.group .title {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding-left: 20px;
+  border-top: 0px;
+  border-bottom: 1px solid #c3c3c3;
+}
+
+.group .title h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.group .items {
+  display: flex;
+  flex-direction: column;
+}
+
+.group .item {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 60px 1fr 100px;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas: '. . .';
+  padding: 10px 10px;
+  border-bottom: 1px solid #c3c3c3;
+}
+
+.group .item .image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.group .item .image img {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #c3c3c3;
+  color: transparent;
+}
+
+.group .item .content {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.item .content h5 {
+  margin: 0px;
+}
+
+.item .content h5 em {
+  color: #c3c3c3;
+  font-style: normal;
+}
+
+.group .item .actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+  align-items: center;
+}
+
+.group .item .actions button,
+.page .topbar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.group .item .actions button svg {
+  stroke: #c8dee5;
+}
+
+.page .topbar button svg {
+  stroke: #012c63;
+}
+
+.group .item .actions button:hover svg {
+  stroke: #06b0db;
+}
+
+.expired .title h4,
+.expired-soon .title h4 {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.expired .title h4 {
+  color: var(--color-red);
+}
+
+.expired-soon .title h4 {
+  color: var(--color-orange);
+}

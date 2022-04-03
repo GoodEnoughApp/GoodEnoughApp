@@ -39,8 +39,20 @@ a {
   color: #3d3d3d;
 }
 
+.layout-2 {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: var(--layout-top-height) 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    '.'
+    '.';
+}
+
 :root {
   --safe-area-inset: 20px;
+  --nav-bar-width: 65px;
   --bottom-bar-height: 50px;
 
   --color-red: rgb(255, 55, 95);
@@ -48,4 +60,5 @@ a {
   --color-orange: rgb(255, 149, 0);
 
   --mobile-breakpoint: 480px;
+  --layout-top-height: 60px;
 }

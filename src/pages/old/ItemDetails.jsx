@@ -1,10 +1,10 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
-import Loading from '../components/Loading';
+import Loading from '../../components/Loading';
 import styles from './ItemDetails.module.css';
-import Icon from '../components/Icon';
-import AppContext from '../AppContext';
+import Icon from '../../components/Icon';
+import AppContext from '../../AppContext';
 
 const ViewContext = createContext({});
 
