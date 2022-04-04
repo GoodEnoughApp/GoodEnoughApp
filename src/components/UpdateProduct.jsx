@@ -17,12 +17,12 @@ export default function UpdateProduct({
 }) {
   const [quantity, setQuantity] = useState(item.quantity);
   const [cost, setCost] = useState(item.cost);
-  const [expirationDate, setExpirationDate] = useState(item.expiration_date);
+  const [expirationDate, setExpirationDate] = useState(item.expirationDate);
 
   useEffect(() => {
     setQuantity(item.quantity);
     setCost(item.cost);
-    setExpirationDate(item.expiration_date);
+    setExpirationDate(item.expirationDate);
   }, [item]);
 
   if (!api.token) {
@@ -63,7 +63,7 @@ function Options({ item }) {
     api,
     onUpdate,
   } = useContext(ComponentContext);
-  const { id, title, brand } = item;
+  const { id, title, brand, initialQuantity } = item;
   const onSave = async (evt) => {
     evt.preventDefault();
 
@@ -71,7 +71,8 @@ function Options({ item }) {
       const response = await api.updateItem({
         itemId: id,
         expirationDate,
-        initialQuantity: item.initial_quantity,
+        initialQuantity:
+          initialQuantity === 0 ? parseInt(`${quantity}`, 10) : initialQuantity,
         quantity: parseInt(`${quantity}`, 10),
         cost: parseFloat(`${cost}`),
         isUsed: false,
@@ -178,8 +179,8 @@ function Actions() {
     try {
       await api.updateItem({
         itemId: id,
-        expirationDate: item.expiration_date,
-        initialQuantity: item.initial_quantity,
+        expirationDate: item.expirationDate,
+        initialQuantity: item.initialQuantity,
         quantity: item.quantity,
         cost: item.cost,
         isUsed: true,

@@ -26,7 +26,7 @@ export default function ItemDetails() {
       const { status } = await api.updateItem({
         itemId: id,
         expirationDate,
-        initialQuantity: item.initial_quantity,
+        initialQuantity: item.initialQuantity,
         quantity: parseInt(`${quantity}`, 10),
         cost: parseFloat(`${cost}`),
         isUsed: false,
@@ -55,7 +55,7 @@ export default function ItemDetails() {
         setItem(response.item);
         setQuantity(response.item.quantity);
         setCost(response.item.cost);
-        setExpirationDate(response.item.expiration_date);
+        setExpirationDate(response.item.expirationDate);
         setIsLoading(false);
       } catch (e) {
         setIsLoading(false);
@@ -208,8 +208,8 @@ function Actions() {
     try {
       await api.updateItem({
         itemId: id,
-        expirationDate: item.expiration_date,
-        initialQuantity: item.initial_quantity,
+        expirationDate: item.expirationDate,
+        initialQuantity: item.initialQuantity,
         quantity: item.quantity,
         cost: item.cost,
         isUsed: true,

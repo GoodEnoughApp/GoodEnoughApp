@@ -35,7 +35,7 @@ export default function Home() {
       items
         .filter((i) => !i.is_used)
         .forEach((item) => {
-          const expirationDate = item.expiration_date;
+          const { expirationDate } = item;
           const expirationMoment = moment(expirationDate);
           const isExpired = expirationMoment.isSameOrBefore(now, 'day');
           const productId = item.product_id;
@@ -285,7 +285,7 @@ function Group({ id, title, items, isExpired, isSoonToExpired }) {
           <Item
             key={item.id}
             groupId={id}
-            expirationDate={item.expiration_date}
+            expirationDate={item.expirationDate}
             {...item}
           />
         ))}

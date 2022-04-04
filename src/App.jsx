@@ -19,8 +19,6 @@ import ShoppingItem from './pages/ShoppingItem';
 import ForgetPassword from './pages/ForgetPassword';
 import Password from './pages/profile/Password';
 
-// TODO: I need to add support for ForgotPassword
-
 import Api from './services/Api';
 
 const host = 'https://good-enough-webapp-staging.herokuapp.com';
@@ -40,6 +38,8 @@ function App() {
   const [device, setDevice] = useState(null);
   const [cursorLocation, setCursorLocation] = useState(null);
   const [api, setApi] = useState(new Api(host));
+  const [isNotificationStatusEnabled, setIsNotificationStatusEnabled] =
+    useState(false);
   if (localStorage.getItem('token')) {
     api.setToken(localStorage.getItem('token'));
   }
@@ -65,6 +65,16 @@ function App() {
         clientY,
       });
     });
+
+    if (window.Notification) {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission((status) => {
+          setIsNotificationStatusEnabled(status === 'granted');
+        });
+      } else {
+        setIsNotificationStatusEnabled(true);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -82,6 +92,10 @@ function App() {
         cursorLocation,
         dimensions,
         device,
+        isNotificationStatusEnabled:
+          Notification.permission === 'granted'
+            ? true
+            : isNotificationStatusEnabled,
       }}
     >
       <main className={styles.app}>

@@ -15,8 +15,51 @@ import styles from './Base.module.css';
 
 const ViewContext = createContext({});
 
+function notifyExpiredItems({ items, isEnabled, onSelect, productMap }) {
+  const now = moment(new Date());
+  const key = 'notified-item';
+  if (!isEnabled) {
+    return;
+  }
+
+  items = items
+    .filter((i) => !i.isUsed)
+    .filter((item) => {
+      const { expirationDate } = item;
+      const expirationDateMoment = moment(expirationDate);
+      // Filters between a range of dates
+      return (
+        expirationDateMoment.diff(now, 'days') >= 1 &&
+        expirationDateMoment.diff(now, 'days') <= 7
+      );
+    });
+
+  if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, '[]');
+  }
+
+  const itemSet = new Set([...JSON.parse(localStorage.getItem(key))]);
+  for (const item of items) {
+    const { id, productId } = item;
+    const product = productMap.get(productId);
+    const title = product.name;
+    if (!itemSet.has(id)) {
+      const notification = new Notification(`Donate: ${title}`, {
+        body: `The item "${title}" is near expire, please donate the item if possible`,
+        icon: '/logo512.png',
+      });
+      notification.onclick = () => {
+        onSelect(id);
+      };
+      itemSet.add(id);
+    }
+  }
+  localStorage.setItem(key, JSON.stringify([...itemSet]));
+}
+
 export default function Home() {
   const history = useHistory();
+  const { isNotificationStatusEnabled } = useContext(AppContext);
   const [selection, setSelection] = useState(null);
   const { api } = useContext(AppContext);
   const [groups, setGroups] = useState([]);
@@ -48,6 +91,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    console.log(`Notification status: ${isNotificationStatusEnabled}`);
     if (!localStorage.getItem('token')) {
       history.replace('/signin');
     }
@@ -59,15 +103,27 @@ export default function Home() {
 
       response = await api.getProducts();
       setProducts(response.products);
-      setProductsMap(
-        response.products.reduce((acc, product) => {
-          const { id } = product;
-          acc.set(id, product);
-          return acc;
-        }, new Map()),
-      );
+      const productMap = response.products.reduce((acc, product) => {
+        const { id } = product;
+        acc.set(id, product);
+        return acc;
+      }, new Map());
+      setProductsMap(productMap);
 
       response = await api.getItems();
+      notifyExpiredItems({
+        items: response.items,
+        isEnabled: isNotificationStatusEnabled,
+        productMap,
+        onSelect: (id) => {
+          for (const item of response.items) {
+            if (item.id === id) {
+              setSelection(item);
+              break;
+            }
+          }
+        },
+      });
       setItems(response.items);
 
       setIsLoading(false);
@@ -86,10 +142,10 @@ export default function Home() {
     items
       .filter((i) => !i.is_used)
       .forEach((item) => {
-        const expirationDate = item.expiration_date;
+        const { expirationDate } = item;
         const expirationMoment = moment(expirationDate);
         const isExpired = expirationMoment.isSameOrBefore(now, 'day');
-        const productId = item.product_id;
+        const { productId } = item;
         const product = productsMap.get(productId);
 
         item.product = product;
