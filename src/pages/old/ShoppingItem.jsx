@@ -1,9 +1,9 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import Loading from '../components/Loading';
-import Icon from '../components/Icon';
+import Loading from '../../components/Loading';
+import Icon from '../../components/Icon';
 import styles from './ShoppingItem.module.css';
-import AppContext from '../AppContext';
+import AppContext from '../../AppContext';
 
 const ViewContext = createContext({});
 
@@ -41,7 +41,7 @@ export default function ShoppingItem() {
       try {
         const response = await api.getShoppingItem({ id });
         const { product } = await api.getProduct({
-          id: response.item.product_id,
+          id: response.item.productId,
         });
         response.item.title = product.name;
         response.item.brand = product.brand;

@@ -47,7 +47,7 @@ export default function ItemDetails() {
         setIsLoading(true);
         const response = await api.getItem({ id });
         const { product } = await api.getProduct({
-          id: response.item.product_id,
+          id: response.item.productId,
         });
         response.item.title = product.name;
         response.item.brand = product.brand;

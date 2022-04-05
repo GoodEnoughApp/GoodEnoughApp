@@ -38,7 +38,7 @@ export default function Home() {
           const { expirationDate } = item;
           const expirationMoment = moment(expirationDate);
           const isExpired = expirationMoment.isSameOrBefore(now, 'day');
-          const productId = item.product_id;
+          const productId = item.productId;
           const product = products.get(productId);
 
           item.product = product;
