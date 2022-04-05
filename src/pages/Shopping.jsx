@@ -195,7 +195,7 @@ function Empty() {
 
 function Selection({ selection }) {
   const { api } = useContext(AppContext);
-  const { setSelection, isLoading, onDeleteItem, onUpdateItem } =
+  const { setSelection, isLoading, onRemoveItem, onUpdateItem } =
     useContext(ViewContext);
   if (!selection || isLoading) {
     return <Unselect />;
@@ -213,7 +213,7 @@ function Selection({ selection }) {
         setSelection(null);
       }}
       onDelete={(item) => {
-        onDeleteItem(item);
+        onRemoveItem(item);
         setSelection(null);
       }}
     />
