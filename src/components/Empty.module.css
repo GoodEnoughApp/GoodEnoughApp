@@ -1,0 +1,78 @@
+.empty {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.empty button {
+  margin-top: 50px;
+  border: 1px solid #0360ae;
+  border-radius: 4px;
+  background: none;
+  width: 50%;
+  font-size: 1.05rem;
+  padding: 10px;
+  color: #0360ae;
+}
+
+.empty small {
+  font-weight: 400;
+  color: #0360ae;
+  font-size: 1rem;
+  max-width: 66vw;
+  text-align: center;
+}
+
+.empty .penguin {
+  width: 25vh;
+  margin-bottom: 30px;
+}
+
+.empty .penguin svg path {
+  fill: #0360ae;
+}
+
+.empty .penguin svg path.eye,
+.empty .penguin svg path.mouth {
+  animation: eye-move 2s infinite;
+}
+
+.expired .title h4,
+.expired-soon .title h4 {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.expired .title h4 {
+  color: var(--color-red);
+}
+
+.expired-soon .title h4 {
+  color: var(--color-orange);
+}
+
+@keyframes eye-move {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(25px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes breath {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

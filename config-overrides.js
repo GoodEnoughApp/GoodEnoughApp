@@ -1,5 +1,8 @@
 const path = require('path');
-module.exports = function override(config) {
+const { override, addWebpackPlugin } = require('customize-cra');
+const { InjectManifest } = require('workbox-webpack-plugin');
+
+module.exports = (config, ...args) => {
   const wasmExtensionRegExp = /\.wasm$/;
   /*
     config.resolve.alias = {
@@ -39,7 +42,16 @@ module.exports = function override(config) {
       },
     ],
   });
+  // remove GenerateSW plugin
+  config.plugins.pop();
+  const overridenConf = override(
+    addWebpackPlugin(
+      new InjectManifest({
+        swSrc: './src/sw-template.js',
+        swDest: './service-worker.js',
+      }),
+    ),
+  )(config, ...args);
 
-  // config.target = 'web';
-  return config;
+  return overridenConf;
 };

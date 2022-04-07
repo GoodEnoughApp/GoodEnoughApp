@@ -29,9 +29,8 @@
 
 .logo {
   width: 120px;
-  height: 120px;
   overflow: hidden;
-  margin: 20px auto;
+  margin: 0px auto;
   border-radius: 16px;
 }
 
@@ -112,4 +111,15 @@
 
 .verification h2 {
   margin-bottom: 40px;
+}
+
+@media only screen and (min-width: 480px) {
+  .page form {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    padding: 20px;
+    border-radius: 8px;
+  }
 }

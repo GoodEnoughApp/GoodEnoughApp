@@ -1,0 +1,72 @@
+.bar {
+  border-right: 1px solid #c3c3c3;
+  padding: 20px 0px;
+}
+
+.bar span {
+  font-size: 0.8rem;
+}
+
+.bar div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: var(--nav-bar-width);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bar div > button,
+.bar div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 80%;
+  transition: opacity 220ms ease-out;
+}
+
+.bar div > button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.bar div > button:disabled {
+  cursor: not-allowed;
+}
+
+.bar div > button.selected {
+  opacity: 100%;
+}
+
+.bar div > button span {
+  color: #c4c4c4;
+  font-weight: 400;
+  transition: color 220ms ease-out;
+}
+
+.bar div > button.selected span {
+  color: #0360ae;
+  font-weight: 600;
+}
+
+@media only screen and (max-width: 480px) {
+  .bar {
+    border-top: 1px solid #c3c3c3;
+    padding: 0px 20px;
+  }
+  .bar div {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .bar span {
+    font-size: 1rem;
+  }
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bar {
+    padding-bottom: var(--safe-area-inset);
+  }
+}
