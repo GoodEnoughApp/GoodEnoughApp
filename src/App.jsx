@@ -37,8 +37,6 @@ function App() {
   const [device, setDevice] = useState(null);
   const [cursorLocation, setCursorLocation] = useState(null);
   const [api, setApi] = useState(new Api(host));
-  const [isNotificationStatusEnabled, setIsNotificationStatusEnabled] =
-    useState(false);
   if (localStorage.getItem('token')) {
     api.setToken(localStorage.getItem('token'));
   }
@@ -64,16 +62,6 @@ function App() {
         clientY,
       });
     });
-
-    if (window.Notification) {
-      if (Notification.permission !== 'granted') {
-        Notification.requestPermission((status) => {
-          setIsNotificationStatusEnabled(status === 'granted');
-        });
-      } else {
-        setIsNotificationStatusEnabled(true);
-      }
-    }
   }, []);
 
   useEffect(() => {
@@ -91,10 +79,6 @@ function App() {
         cursorLocation,
         dimensions,
         device,
-        isNotificationStatusEnabled:
-          Notification.permission === 'granted'
-            ? true
-            : isNotificationStatusEnabled,
       }}
     >
       <main className={styles.app}>

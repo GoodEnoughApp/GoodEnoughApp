@@ -228,9 +228,12 @@ function Actions() {
   };
   return (
     <div className={styles.actions}>
-      <button type="button" className={styles.used} onClick={onClickUsed}>
-        Set Item as Used
-      </button>
+      {moment(item.expirationDate).isAfter(moment(new Date())) ? (
+        <button type="button" className={styles.used} onClick={onClickUsed}>
+          Set Item as Used
+        </button>
+      ) : null}
+
       <button type="button" className={styles.delete} onClick={onClickDelete}>
         Delete Product
       </button>
