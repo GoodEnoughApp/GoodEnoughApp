@@ -15,24 +15,31 @@ import styles from './Base.module.css';
 
 const ViewContext = createContext({});
 
-function notifyExpiredItems({ items, isEnabled, onSelect, productMap }) {
-  const now = moment(new Date());
+function notifyExpiredItems({ items, onSelect, productMap }) {
   const key = 'notified-item';
-  if (!isEnabled) {
+
+  if (!window?.Notification) {
+    return;
+  }
+
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission((status) => {
+      if (status === 'granted') {
+        notifyExpiredItems({ items, onSelect, productMap });
+      }
+    });
     return;
   }
 
   items = items
-    .filter((i) => !i.isUsed)
     .filter((item) => {
       const { expirationDate } = item;
-      const expirationDateMoment = moment(expirationDate);
-      // Filters between a range of dates
       return (
-        expirationDateMoment.diff(now, 'days') >= 1 &&
-        expirationDateMoment.diff(now, 'days') <= 7
+        moment(expirationDate).diff(moment(new Date()), 'days') <= 7 &&
+        moment(expirationDate).diff(moment(new Date()), 'days') >= 1
       );
-    });
+    })
+    .sort((a, b) => new Date(a.expirationDate) - new Date(b.expirationDate));
 
   if (!localStorage.getItem(key)) {
     localStorage.setItem(key, '[]');
@@ -59,7 +66,6 @@ function notifyExpiredItems({ items, isEnabled, onSelect, productMap }) {
 
 export default function Home() {
   const history = useHistory();
-  const { isNotificationStatusEnabled } = useContext(AppContext);
   const [selection, setSelection] = useState(null);
   const { api } = useContext(AppContext);
   const [groups, setGroups] = useState([]);
@@ -91,7 +97,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(`Notification status: ${isNotificationStatusEnabled}`);
     if (!localStorage.getItem('token')) {
       history.replace('/signin');
     }
@@ -111,9 +116,9 @@ export default function Home() {
       setProductsMap(productMap);
 
       response = await api.getItems();
+      response.items = response.items.filter((i) => !i.isUsed);
       notifyExpiredItems({
         items: response.items,
-        isEnabled: isNotificationStatusEnabled,
         productMap,
         onSelect: (id) => {
           for (const item of response.items) {
