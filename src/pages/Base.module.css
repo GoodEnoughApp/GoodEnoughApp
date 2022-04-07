@@ -45,7 +45,6 @@
   transition: color ease-out 220ms;
 }
 
-.selected .content h5,
 .selected-item h5 {
   color: #0360ae;
 }

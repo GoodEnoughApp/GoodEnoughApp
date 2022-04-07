@@ -21,7 +21,6 @@ import Password from './pages/profile/Password';
 import Api from './services/Api';
 
 const host = 'https://good-enough-webapp-staging.herokuapp.com';
-// const host = 'https://b26b-69-120-130-235.ngrok.io';
 
 function getDeviceType(width) {
   if (width >= 481 && width <= 768) {
