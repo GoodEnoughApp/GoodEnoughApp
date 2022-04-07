@@ -2,10 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import styles from './AddProduct.module.css';
-import Barcode from '../components/Barcode';
-import Loading from '../components/Loading';
-import Icon from '../components/Icon';
-import AppContext from '../AppContext';
+import Barcode from '../../components/Barcode';
+import Loading from '../../components/Loading';
+import Icon from '../../components/Icon';
+import AppContext from '../../AppContext';
 
 const ViewContext = createContext({});
 
