@@ -131,6 +131,11 @@
   cursor: pointer;
 }
 
+.actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .page section input,
 .page section textarea {
   width: 170px;

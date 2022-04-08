@@ -14,6 +14,7 @@ export default function UpdateProduct({
   onUpdate,
   onDelete,
   onUsed,
+  isOnline,
 }) {
   const [quantity, setQuantity] = useState(item.quantity);
   const [cost, setCost] = useState(item.cost);
@@ -44,6 +45,7 @@ export default function UpdateProduct({
         setCost,
         onDelete,
         onUsed,
+        isOnline,
       }}
     >
       <Options item={item} />
@@ -62,10 +64,14 @@ function Options({ item }) {
     goBack,
     api,
     onUpdate,
+    isOnline,
   } = useContext(ComponentContext);
   const { id, title, brand, initialQuantity } = item;
   const onSave = async (evt) => {
     evt.preventDefault();
+    if (!isOnline) {
+      return;
+    }
 
     try {
       const response = await api.updateItem({
@@ -102,7 +108,13 @@ function Options({ item }) {
         </div>
         <div>Edit product</div>
         <div>
-          <button type="submit">Save</button>
+          {isOnline ? (
+            <button type="submit">Save</button>
+          ) : (
+            <button type="submit" disabled>
+              Save
+            </button>
+          )}
         </div>
       </header>
       <div>
@@ -171,7 +183,7 @@ function Options({ item }) {
 }
 
 function Actions() {
-  const { api, item, goBack, onUpdate, onDelete } =
+  const { api, item, goBack, onUpdate, onDelete, isOnline } =
     useContext(ComponentContext);
   const { id } = item;
   const onClickUsed = async () => {
@@ -229,12 +241,22 @@ function Actions() {
   return (
     <div className={styles.actions}>
       {moment(item.expirationDate).isAfter(moment(new Date())) ? (
-        <button type="button" className={styles.used} onClick={onClickUsed}>
+        <button
+          type="button"
+          className={styles.used}
+          disabled={!isOnline}
+          onClick={onClickUsed}
+        >
           Set Item as Used
         </button>
       ) : null}
 
-      <button type="button" className={styles.delete} onClick={onClickDelete}>
+      <button
+        type="button"
+        className={styles.delete}
+        disabled={!isOnline}
+        onClick={onClickDelete}
+      >
         Delete Product
       </button>
     </div>

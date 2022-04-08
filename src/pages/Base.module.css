@@ -77,6 +77,17 @@
 .topbar div img {
   color: transparent; /*To hide the alt text*/
 }
+
+.page button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page button:disabled:hover {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .page .topbar button svg {
   stroke: #012c63;
 }

@@ -86,7 +86,11 @@
   stroke: #012c63;
 }
 
-.group .item .actions button:hover svg {
+.group .item .actions button svg {
+  transition: stroke ease-out 220ms;
+}
+
+.group .item .actions button:hover:not(:disabled) svg {
   stroke: #06b0db;
 }
 

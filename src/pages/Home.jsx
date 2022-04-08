@@ -10,132 +10,65 @@ import Loading from '../components/Loading';
 import AddProduct from '../components/AddProduct';
 import UpdateProduct from '../components/UpdateProduct';
 import { Empty as Penguin } from '../components/Empty';
+import { notifyExpiredItems } from '../utils/notification';
+import useHome from '../hooks/useHome';
 
 import styles from './Base.module.css';
+import { useHealth } from '../hooks/health';
 
 const ViewContext = createContext({});
 
-function notifyExpiredItems({ items, onSelect, productMap }) {
-  const key = 'notified-item';
-
-  if (!window?.Notification) {
-    return;
-  }
-
-  if (Notification.permission !== 'granted') {
-    Notification.requestPermission((status) => {
-      if (status === 'granted') {
-        notifyExpiredItems({ items, onSelect, productMap });
-      }
-    });
-    return;
-  }
-
-  items = items
-    .filter((item) => {
-      const { expirationDate } = item;
-      return (
-        moment(expirationDate).diff(moment(new Date()), 'days') <= 7 &&
-        moment(expirationDate).diff(moment(new Date()), 'days') >= 1
-      );
-    })
-    .sort((a, b) => new Date(a.expirationDate) - new Date(b.expirationDate));
-
-  if (!localStorage.getItem(key)) {
-    localStorage.setItem(key, '[]');
-  }
-
-  const itemSet = new Set([...JSON.parse(localStorage.getItem(key))]);
-  for (const item of items) {
-    const { id, productId } = item;
-    const product = productMap.get(productId);
-    const title = product.name;
-    if (!itemSet.has(id)) {
-      const notification = new Notification(`Donate: ${title}`, {
-        body: `The item "${title}" is near expire, please donate the item if possible`,
-        icon: '/logo512.png',
-      });
-      notification.onclick = () => {
-        onSelect(id);
-      };
-      itemSet.add(id);
-    }
-  }
-  localStorage.setItem(key, JSON.stringify([...itemSet]));
-}
-
 export default function Home() {
   const history = useHistory();
-  const [selection, setSelection] = useState(null);
+  const { isOnline } = useHealth();
   const { api } = useContext(AppContext);
+  const {
+    isLoading,
+    categories,
+    products,
+    items,
+    onAddItem,
+    onDeleteItem,
+    onUpdateItem,
+  } = useHome(api);
+
+  const [selection, setSelection] = useState(null);
   const [groups, setGroups] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [items, setItems] = useState(null);
-  const [productsMap, setProductsMap] = useState(null);
 
   const classNames = [styles.page];
 
-  const onAddItem = (item) => {
-    setItems([...items, item]);
-  };
-
-  const onDeleteItem = (item) => {
-    setItems(items.filter((i) => i.id !== item.id));
-  };
-
-  const onUpdateItem = (item) => {
-    setItems(
-      items.map((i) => {
-        if (i.id === item.id) {
-          return item;
-        }
-        return i;
-      }),
-    );
-  };
+  const productsMap = products.reduce((acc, product) => {
+    const { id } = product;
+    acc.set(id, product);
+    return acc;
+  }, new Map());
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       history.replace('/signin');
     }
 
-    const fetchData = async () => {
-      setIsLoading(true);
-      let response = await api.getCategories();
-      setCategories(response.categories);
+    if (isLoading) {
+      return;
+    }
 
-      response = await api.getProducts();
-      setProducts(response.products);
-      const productMap = response.products.reduce((acc, product) => {
-        const { id } = product;
-        acc.set(id, product);
-        return acc;
-      }, new Map());
-      setProductsMap(productMap);
+    if (!isOnline && selection === 'add') {
+      setSelection(null);
+    }
 
-      response = await api.getItems();
-      response.items = response.items.filter((i) => !i.isUsed);
-      notifyExpiredItems({
-        items: response.items,
-        productMap,
-        onSelect: (id) => {
-          for (const item of response.items) {
-            if (item.id === id) {
-              setSelection(item);
-              break;
-            }
+    notifyExpiredItems({
+      items,
+      productsMap,
+      onSelect: (id) => {
+        for (const item of items) {
+          if (item.id === id) {
+            setSelection(item);
+            break;
           }
-        },
-      });
-      setItems(response.items);
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, []);
+        }
+      },
+    });
+  }, [isLoading, isOnline]);
 
   useEffect(() => {
     const groupMap = {};
@@ -228,6 +161,7 @@ export default function Home() {
         onDeleteItem,
         selection,
         onUpdateItem,
+        isOnline,
       }}
     >
       <div className={classNames.join(' ')}>
@@ -240,7 +174,7 @@ export default function Home() {
 }
 
 function Content({ isLoading, groups }) {
-  const { setSelection } = useContext(ViewContext);
+  const { setSelection, isOnline } = useContext(ViewContext);
   if (isLoading) {
     return (
       <section>
@@ -264,6 +198,7 @@ function Content({ isLoading, groups }) {
         <div>Home</div>
         <div>
           <button
+            disabled={!isOnline}
             type="button"
             onClick={() => {
               setSelection('add');
@@ -296,6 +231,7 @@ function Selection({ selection }) {
     onAddItem,
     onDeleteItem,
     onUpdateItem,
+    isOnline,
   } = useContext(ViewContext);
   if (!selection || isLoading) {
     return <Unselect />;
@@ -319,6 +255,7 @@ function Selection({ selection }) {
     <UpdateProduct
       api={api}
       item={selection}
+      isOnline={isOnline}
       goBack={() => {
         setSelection(null);
       }}
@@ -351,7 +288,7 @@ function Items({ groups }) {
 
 function ProductItem({ item, groupId }) {
   const { id, title, quantity, cost, expirationDate, product } = item;
-  const { setItemAsUsed, api, setSelection, selection } =
+  const { setItemAsUsed, api, setSelection, selection, isOnline } =
     useContext(ViewContext);
   const [isLoading, setIsLoading] = useState(false);
   const onClick = async () => {
@@ -386,7 +323,7 @@ function ProductItem({ item, groupId }) {
     <Item
       selectedClass={selection?.id === id ? styles['selected-item'] : null}
       onSelect={() => setSelection(item)}
-      isLoading={isLoading}
+      isLoading={isLoading || !isOnline}
       onCheckboxClick={onClick}
       {...item}
     />
