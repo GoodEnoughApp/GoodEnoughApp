@@ -179,6 +179,8 @@ export default function Home() {
         <Selection selection={selection} />
         <Profile
           me={me}
+          api={api}
+          isOnline={isOnline}
           isOpen={isProfileOpen}
           onLogout={() => {
             if (confirm('Are you sure you want to logout?')) {

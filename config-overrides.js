@@ -1,6 +1,7 @@
 const path = require('path');
 const { override, addWebpackPlugin } = require('customize-cra');
 const { InjectManifest } = require('workbox-webpack-plugin');
+// const WebpackLighthousePlugin = require('webpack-lighthouse-plugin');
 
 module.exports = (config, ...args) => {
   const wasmExtensionRegExp = /\.wasm$/;
@@ -50,7 +51,14 @@ module.exports = (config, ...args) => {
         swSrc: './src/sw-template.js',
         swDest: './service-worker.js',
       }),
-    ),
+    ) /*,
+    process.env.LIGHTHOUSE_AUDIT === 'true'
+      ? addWebpackPlugin(
+          new WebpackLighthousePlugin({
+            url: 'http://localhost:5000',
+          }),
+        )
+      : null,*/,
   )(config, ...args);
 
   return overridenConf;

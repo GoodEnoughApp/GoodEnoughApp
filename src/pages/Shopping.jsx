@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState, useEffect, createContext, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 // import moment from 'moment';
@@ -12,6 +10,7 @@ import UpdateShoppingItem from '../components/UpdateShoppingItem';
 import { Empty as Whale } from '../components/Empty';
 import { useHealth } from '../hooks/health';
 import useShopping from '../hooks/useShopping';
+import Profile from './profile/Profile';
 
 import styles from './Base.module.css';
 
@@ -20,6 +19,7 @@ const ViewContext = createContext({});
 export default function Shopping() {
   const history = useHistory();
   const { isOnline } = useHealth();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { api } = useContext(AppContext);
   const { isLoading, categories, products, items, onRemoveItem, onUpdateItem } =
     useShopping(api);
@@ -36,6 +36,8 @@ export default function Shopping() {
     classNames.push(styles.selected);
   }
 
+  const me = JSON.parse(localStorage.getItem('me') || '{}');
+
   return (
     <ViewContext.Provider
       value={{
@@ -51,9 +53,30 @@ export default function Shopping() {
       }}
     >
       <div className={classNames.join(' ')}>
-        <Navbar selected="shopping" />
+        <Navbar
+          onProfileClick={() => {
+            setIsProfileOpen(true);
+          }}
+          selected="shopping"
+        />
         <Content isLoading={isLoading} />
         <Selection selection={selection} />
+        <Profile
+          me={me}
+          api={api}
+          isOnline={isOnline}
+          isOpen={isProfileOpen}
+          onLogout={() => {
+            if (confirm('Are you sure you want to logout?')) {
+              localStorage.clear();
+              setIsProfileOpen(false);
+              history.replace('/signin');
+            }
+          }}
+          onSend={() => {
+            setIsProfileOpen(false);
+          }}
+        />
       </div>
     </ViewContext.Provider>
   );
