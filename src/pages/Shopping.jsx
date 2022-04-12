@@ -6,11 +6,11 @@ import AppContext from '../AppContext';
 import Navbar from '../components/Navbar';
 import Icon from '../components/Icon';
 import Loading from '../components/Loading';
+import Profile from '../components/Profile';
 import UpdateShoppingItem from '../components/UpdateShoppingItem';
 import { Empty as Whale } from '../components/Empty';
 import { useHealth } from '../hooks/health';
 import useShopping from '../hooks/useShopping';
-import Profile from './profile/Profile';
 
 import styles from './Base.module.css';
 
