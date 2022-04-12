@@ -45,6 +45,8 @@ components:
           format: uuid
         name:
           type: string
+        type:
+          type: string
     product:
       type: object
       properties:
@@ -97,8 +99,13 @@ components:
           type: integer
         cost:
           type: integer
+        isExpired:
+          type: boolean
         isUsed:
           type: boolean
+        endAt:
+          type: string
+          format: date
     shopping_list_item:
       type: object
       properties:
