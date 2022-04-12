@@ -10,6 +10,8 @@ import Icon from '../components/Icon';
 import Loading from '../components/Loading';
 import UpdateShoppingItem from '../components/UpdateShoppingItem';
 import { Empty as Penguin } from '../components/Empty';
+import { useHealth } from '../hooks/health';
+import useShopping from '../hooks/useShopping';
 
 import styles from './Base.module.css';
 
@@ -17,67 +19,18 @@ const ViewContext = createContext({});
 
 export default function Shopping() {
   const history = useHistory();
-  const [selection, setSelection] = useState(null);
+  const { isOnline } = useHealth();
   const { api } = useContext(AppContext);
-  const [categories, setCategories] = useState([]);
-  const [productsMap, setProductsMap] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [items, setItems] = useState([]);
-
-  const onRemoveItem = ({ id }) => {
-    setItems(items.filter((item) => item.id !== id));
-  };
-
-  const onUpdateItem = (item) => {
-    setItems(
-      items.map((i) => {
-        if (i.id === item.id) {
-          return item;
-        }
-        return i;
-      }),
-    );
-  };
+  const { isLoading, categories, products, items, onRemoveItem, onUpdateItem } =
+    useShopping(api);
+  const [selection, setSelection] = useState(null);
+  const classNames = [styles.page];
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       history.replace('/signin');
     }
-
-    const fetchData = async () => {
-      setIsLoading(true);
-      let response = await api.getCategories();
-      setCategories(response.categories);
-
-      response = await api.getProducts();
-      setProducts(response.products);
-      const productMap = response.products.reduce((acc, product) => {
-        const { id } = product;
-        acc.set(id, product);
-        return acc;
-      }, new Map());
-      setProductsMap(productMap);
-
-      response = await api.getShopping();
-      const data = [];
-      for (const item of response.items) {
-        const product = productMap.get(item.productId);
-        if (!product) {
-          continue;
-        }
-        item.product = product;
-        item.title = product.name;
-        data.push(item);
-      }
-      setItems(data);
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  const classNames = [styles.page];
+  }, [isLoading, isOnline]);
 
   if (selection) {
     classNames.push(styles.selected);
@@ -88,12 +41,12 @@ export default function Shopping() {
       value={{
         api,
         items,
+        isOnline,
         onUpdateItem,
         onRemoveItem,
         selection,
         setSelection,
         products,
-        productsMap,
         categories,
       }}
     >
@@ -195,7 +148,7 @@ function Empty() {
 
 function Selection({ selection }) {
   const { api } = useContext(AppContext);
-  const { setSelection, isLoading, onRemoveItem, onUpdateItem } =
+  const { setSelection, isLoading, onRemoveItem, onUpdateItem, isOnline } =
     useContext(ViewContext);
   if (!selection || isLoading) {
     return <Unselect />;
@@ -205,6 +158,7 @@ function Selection({ selection }) {
     <UpdateShoppingItem
       api={api}
       item={selection}
+      isOnline={isOnline}
       goBack={() => {
         setSelection(null);
       }}
@@ -221,7 +175,7 @@ function Selection({ selection }) {
 }
 
 function ShoppingItem({ item }) {
-  const { api, setSelection, selection, onRemoveItem } =
+  const { api, setSelection, selection, onRemoveItem, isOnline } =
     useContext(ViewContext);
   const { id, title, quantity, cost } = item;
 
@@ -275,7 +229,11 @@ function ShoppingItem({ item }) {
         </div>
       </div>
       <div className={styles.actions}>
-        <button type="button" disabled={isLoading} onClick={onClickChecked}>
+        <button
+          type="button"
+          disabled={isLoading || !isOnline}
+          onClick={onClickChecked}
+        >
           <Icon name="check-square" />
         </button>
       </div>

@@ -12,6 +12,7 @@ export default function UpdateShoppingItem({
   goBack,
   onUpdate,
   onDelete,
+  isOnline,
 }) {
   const [quantity, setQuantity] = useState(item.quantity);
   const [cost, setCost] = useState(item.cost);
@@ -35,6 +36,7 @@ export default function UpdateShoppingItem({
         setQuantity,
         cost,
         setCost,
+        isOnline,
         onUpdate,
         onDelete,
       }}
@@ -45,8 +47,16 @@ export default function UpdateShoppingItem({
 }
 
 function Options({ item }) {
-  const { quantity, setQuantity, cost, setCost, goBack, onUpdate, api } =
-    useContext(ComponentContext);
+  const {
+    quantity,
+    setQuantity,
+    cost,
+    setCost,
+    goBack,
+    onUpdate,
+    api,
+    isOnline,
+  } = useContext(ComponentContext);
   const { id, title, brand } = item;
   const onSave = async (e) => {
     e.preventDefault();
@@ -83,7 +93,9 @@ function Options({ item }) {
         </div>
         <div>Edit item</div>
         <div>
-          <button type="submit">Save</button>
+          <button type="submit" disabled={!isOnline}>
+            Save
+          </button>
         </div>
       </header>
       <div>
@@ -140,7 +152,8 @@ function Options({ item }) {
 }
 
 function Actions() {
-  const { api, item, goBack, onDelete } = useContext(ComponentContext);
+  const { api, item, goBack, onDelete, isOnline } =
+    useContext(ComponentContext);
   const { id } = item;
   const onClickDelete = () => {
     if (!confirm('Are you sure you want to remove the item?')) return;
@@ -161,7 +174,12 @@ function Actions() {
   };
   return (
     <div className={styles.actions}>
-      <button type="button" className={styles.delete} onClick={onClickDelete}>
+      <button
+        type="button"
+        disabled={!isOnline}
+        className={styles.delete}
+        onClick={onClickDelete}
+      >
         Delete Product
       </button>
     </div>

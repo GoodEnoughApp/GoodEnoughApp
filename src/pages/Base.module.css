@@ -78,6 +78,10 @@
   color: transparent; /*To hide the alt text*/
 }
 
+.page button {
+  transition: opacity ease-out 220ms;
+}
+
 .page button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
