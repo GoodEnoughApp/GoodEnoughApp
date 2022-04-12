@@ -15,12 +15,14 @@ import useHome from '../hooks/useHome';
 
 import styles from './Base.module.css';
 import { useHealth } from '../hooks/health';
+import Profile from './profile/Profile';
 
 const ViewContext = createContext({});
 
 export default function Home() {
   const history = useHistory();
   const { isOnline } = useHealth();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { api } = useContext(AppContext);
   const {
     isLoading,
@@ -148,6 +150,8 @@ export default function Home() {
     classNames.push(styles.selected);
   }
 
+  const me = JSON.parse(localStorage.getItem('me') || '{}');
+
   return (
     <ViewContext.Provider
       value={{
@@ -165,9 +169,28 @@ export default function Home() {
       }}
     >
       <div className={classNames.join(' ')}>
-        <Navbar selected="home" />
+        <Navbar
+          onProfileClick={() => {
+            setIsProfileOpen(true);
+          }}
+          selected="home"
+        />
         <Content isLoading={isLoading} groups={groups} />
         <Selection selection={selection} />
+        <Profile
+          me={me}
+          isOpen={isProfileOpen}
+          onLogout={() => {
+            if (confirm('Are you sure you want to logout?')) {
+              localStorage.clear();
+              setIsProfileOpen(false);
+              history.replace('/signin');
+            }
+          }}
+          onSend={() => {
+            setIsProfileOpen(false);
+          }}
+        />
       </div>
     </ViewContext.Provider>
   );

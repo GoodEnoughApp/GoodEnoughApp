@@ -22,7 +22,7 @@
   grid-area: content;
 }
 
-.page > :last-child {
+.page > :nth-child(3) {
   grid-area: selection;
   border-left: 1px solid #c3c3c3;
 }
