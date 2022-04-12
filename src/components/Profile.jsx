@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Icon from '../../components/Icon';
+import Icon from './Icon';
 import styles from './Profile.module.css';
 
 export default function Profile({

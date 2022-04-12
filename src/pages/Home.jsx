@@ -9,13 +9,13 @@ import { Group, Item } from '../components/Item';
 import Loading from '../components/Loading';
 import AddProduct from '../components/AddProduct';
 import UpdateProduct from '../components/UpdateProduct';
+import Profile from '../components/Profile';
 import { Empty as Penguin } from '../components/Empty';
 import { notifyExpiredItems } from '../utils/notification';
 import useHome from '../hooks/useHome';
 
 import styles from './Base.module.css';
 import { useHealth } from '../hooks/health';
-import Profile from './profile/Profile';
 
 const ViewContext = createContext({});
 
