@@ -223,6 +223,8 @@ function Content({ isLoading, groups }) {
           <button
             disabled={!isOnline}
             type="button"
+            aria-label="Add Product"
+            title="Add Product"
             onClick={() => {
               setSelection('add');
             }}

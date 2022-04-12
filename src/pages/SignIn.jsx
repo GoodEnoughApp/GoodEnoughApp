@@ -55,6 +55,7 @@ export default function SignIn() {
           value={email}
           type="email"
           placeholder="Email"
+          autoComplete="username"
           title="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -64,6 +65,7 @@ export default function SignIn() {
           type="password"
           minLength={8}
           placeholder="Password"
+          autoComplete="current-password"
           title="Password"
           onChange={(e) => setPassword(e.target.value)}
         />

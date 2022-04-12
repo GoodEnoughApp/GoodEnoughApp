@@ -86,6 +86,7 @@ function Registration({ onSend }) {
         onChange={(e) => setPassword(e.target.value)}
         type="password"
         required
+        autoComplete="new-password"
         placeholder="Password"
         title="Password"
       />
