@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import AppContext from '../AppContext';
+import AppContext from '../../AppContext';
 import styles from './SignIn.module.css';
-import { Logo } from '../components/Logo';
+import { Logo } from '../../components/Logo';
 
 export default function SignIn() {
   const history = useHistory();
