@@ -12,7 +12,6 @@ export default function Navbar({ selected }) {
       <div>
         <button
           type="button"
-          disabled={selected === 'home'}
           onClick={() => {
             history.replace('/');
           }}
@@ -26,7 +25,6 @@ export default function Navbar({ selected }) {
         </button>
         <button
           type="button"
-          disabled={selected === 'shopping'}
           onClick={() => {
             history.replace('/shopping');
           }}
@@ -40,7 +38,6 @@ export default function Navbar({ selected }) {
         </button>
         <button
           type="button"
-          disabled={selected === 'profile'}
           onClick={() => {
             history.replace('/profile');
           }}

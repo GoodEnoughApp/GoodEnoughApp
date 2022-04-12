@@ -53,6 +53,35 @@
   color: var(--color-orange);
 }
 
+.empty .whale {
+  width: 25vh;
+  margin-bottom: 30px;
+}
+
+.empty .whale svg {
+  overflow: visible;
+}
+
+.empty .whale svg path {
+  fill: rgb(3, 96, 174);
+  animation: move 2s infinite;
+}
+
+@keyframes move {
+  0% {
+    transform: translateY(-25px);
+    fill: rgba(3, 96, 174, 1);
+  }
+  50% {
+    transform: translateY(25px);
+    fill: rgba(3, 96, 174, 0.5);
+  }
+  100% {
+    transform: translateY(-25px);
+    fill: rgba(3, 96, 174, 1);
+  }
+}
+
 @keyframes eye-move {
   0% {
     transform: translateY(0px);

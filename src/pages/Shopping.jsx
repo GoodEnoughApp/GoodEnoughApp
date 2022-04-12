@@ -9,7 +9,7 @@ import Navbar from '../components/Navbar';
 import Icon from '../components/Icon';
 import Loading from '../components/Loading';
 import UpdateShoppingItem from '../components/UpdateShoppingItem';
-import { Empty as Penguin } from '../components/Empty';
+import { Empty as Whale } from '../components/Empty';
 import { useHealth } from '../hooks/health';
 import useShopping from '../hooks/useShopping';
 
@@ -139,11 +139,7 @@ function ShareButton() {
 }
 
 function Empty() {
-  const history = useHistory();
-  const onClick = () => {
-    history.push('/new');
-  };
-  return <Penguin onClick={onClick} />;
+  return <Whale type="whale" />;
 }
 
 function Selection({ selection }) {

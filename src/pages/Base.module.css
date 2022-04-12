@@ -82,12 +82,12 @@
   transition: opacity ease-out 220ms;
 }
 
-.page button:disabled {
+.page section button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.page button:disabled:hover {
+.page section button:disabled:hover {
   opacity: 0.5;
   cursor: not-allowed;
 }
