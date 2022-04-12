@@ -1,0 +1,158 @@
+.main {
+  --item-height: 60px;
+}
+
+.main {
+  width: 70vh;
+  height: 70vh;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 0px;
+}
+
+dialog.main {
+  background: #fff;
+  border: 0px;
+}
+dialog.main::backdrop {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.main > :first-child {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.2fr 1.8fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    '.'
+    '.';
+  height: 100%;
+  width: 100%;
+  border: 1px solid #c4c4c4;
+}
+
+.main > :first-child > :first-child {
+  padding: 16px;
+}
+
+.main > :first-child > :last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.main button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.main > :first-child header {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 100px 1fr 100px;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas: '. . .';
+  padding: 0px 10px;
+  border-bottom: 1px solid #c3c3c3;
+}
+
+.main > :first-child header > div {
+  display: flex;
+}
+
+.main > :first-child header > :first-child,
+.main > :first-child header > :last-child {
+  align-items: center;
+}
+
+.main > :first-child header > :last-child {
+  justify-content: flex-end;
+}
+
+.main > :first-child header > :nth-child(2) {
+  justify-content: center;
+  align-items: center;
+}
+
+.group {
+  border: 1px solid #c4c4c4;
+  margin: 20px 0px;
+  border-left: 0px;
+  border-right: 0px;
+}
+
+.row {
+  height: var(--item-height);
+}
+
+.row.info {
+  padding: 0px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.row.info > div:first-of-type {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.row.info > :last-child {
+  color: #c4c4c4;
+  font-size: 0.98rem;
+}
+
+.group > :not(:last-child) {
+  border-bottom: 1px solid #c4c4c4;
+}
+
+.logout {
+  margin-top: auto;
+  margin-bottom: 0px;
+}
+
+.password button {
+  color: #0360ae;
+}
+
+.password button,
+.logout button {
+  width: 100%;
+  height: var(--item-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  border: 0px;
+  font-weight: bold;
+  cursor: pointer;
+  background: transparent;
+}
+
+.logout button {
+  color: var(--color-red);
+}
+
+@media only screen and (max-width: 480px) {
+  .main {
+    width: 100vw;
+    height: 98vh;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 2vh;
+    max-width: 100%;
+    max-height: 100vh;
+
+    border-radius: 16px 16px 0px 0px;
+  }
+}
+
+/*
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .page {
+    grid-template-rows: 60px 1fr 30px;
+  }
+}*/

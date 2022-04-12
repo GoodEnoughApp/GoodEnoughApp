@@ -50,7 +50,13 @@ export function Item({
         </div>
       </div>
       <div className={styles.actions}>
-        <button type="button" disabled={isLoading} onClick={onCheckboxClick}>
+        <button
+          type="button"
+          aria-label="Check Product"
+          title="Check product"
+          disabled={isLoading}
+          onClick={onCheckboxClick}
+        >
           <Icon name="check-square" />
         </button>
       </div>

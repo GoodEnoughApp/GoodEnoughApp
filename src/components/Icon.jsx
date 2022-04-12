@@ -11,6 +11,7 @@ const validNames = [
   'share',
   'user',
   'lock',
+  'x',
 ];
 export default function Icon({ name, color }) {
   switch (name) {
@@ -32,6 +33,8 @@ export default function Icon({ name, color }) {
       return <User color={color} />;
     case 'lock':
       return <Lock color={color} />;
+    case 'x':
+      return <X color={color} />;
     default:
       return null;
   }
@@ -224,6 +227,26 @@ function Lock({ color }) {
     >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+
+function X({ color }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="feather feather-x"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
 }

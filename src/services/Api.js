@@ -9,6 +9,16 @@ export default class Api {
     this.token = token;
   };
 
+  health = async () => {
+    const url = `${this.host}/categories`;
+    try {
+      await get(url);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   signUp = async ({ name, email, password }) => {
     const url = `${this.host}/register`;
     try {

@@ -22,7 +22,7 @@
   grid-area: content;
 }
 
-.page > :last-child {
+.page > :nth-child(3) {
   grid-area: selection;
   border-left: 1px solid #c3c3c3;
 }
@@ -77,6 +77,21 @@
 .topbar div img {
   color: transparent; /*To hide the alt text*/
 }
+
+.page button {
+  transition: opacity ease-out 220ms;
+}
+
+.page section button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page section button:disabled:hover {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .page .topbar button svg {
   stroke: #012c63;
 }

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import Icon from './Icon';
 import styles from './Navbar.module.css';
 
-export default function Navbar({ selected }) {
+export default function Navbar({ selected, onProfileClick }) {
   const history = useHistory();
   const selectedColor = '#0360ae';
   const unSelectedColor = '#c4c4c4';
@@ -12,7 +12,6 @@ export default function Navbar({ selected }) {
       <div>
         <button
           type="button"
-          disabled={selected === 'home'}
           onClick={() => {
             history.replace('/');
           }}
@@ -26,7 +25,6 @@ export default function Navbar({ selected }) {
         </button>
         <button
           type="button"
-          disabled={selected === 'shopping'}
           onClick={() => {
             history.replace('/shopping');
           }}
@@ -40,9 +38,10 @@ export default function Navbar({ selected }) {
         </button>
         <button
           type="button"
-          disabled={selected === 'profile'}
           onClick={() => {
-            history.replace('/profile');
+            if (onProfileClick) {
+              onProfileClick();
+            }
           }}
           className={selected === 'profile' ? styles.selected : null}
         >

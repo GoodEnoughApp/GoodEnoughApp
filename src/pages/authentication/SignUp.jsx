@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import AppContext from '../AppContext';
+import AppContext from '../../AppContext';
 import styles from './SignUp.module.css';
-import { Logo } from '../components/Logo';
+import { Logo } from '../../components/Logo';
 
 export default function SignUp() {
   const history = useHistory();
@@ -86,6 +86,7 @@ function Registration({ onSend }) {
         onChange={(e) => setPassword(e.target.value)}
         type="password"
         required
+        autoComplete="new-password"
         placeholder="Password"
         title="Password"
       />

@@ -2,8 +2,8 @@ import { useState, useContext } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
 import styles from './ForgetPassword.module.css';
-import AppContext from '../AppContext';
-import { Logo } from '../components/Logo';
+import AppContext from '../../AppContext';
+import { Logo } from '../../components/Logo';
 
 export default function ForgetPassword() {
   const history = useHistory();
