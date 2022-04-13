@@ -241,11 +241,11 @@ function Content({ isLoading, groups }) {
 }
 
 function Empty() {
-  const history = useHistory();
+  const { setSelection, isOnline } = useContext(ViewContext);
   const onClick = () => {
-    history.push('/new');
+    setSelection('add');
   };
-  return <Penguin onClick={onClick} />;
+  return <Penguin onClick={onClick} isOnline={isOnline} />;
 }
 
 function Selection({ selection }) {

@@ -1,20 +1,20 @@
 import styles from './Empty.module.css';
 
-export function Empty({ onClick, type }) {
+export function Empty({ onClick, type, isOnline }) {
   if (type === 'whale') {
     return <EmptyWhale />;
   }
-  return <EmptyPenguin onClick={onClick} />;
+  return <EmptyPenguin onClick={onClick} isOnline={isOnline} />;
 }
 
-function EmptyPenguin({ onClick }) {
+function EmptyPenguin({ onClick, isOnline }) {
   return (
     <div className={styles.empty}>
       <div className={styles.penguin}>
         <Penguin />
       </div>
       <small>You don't have any product</small>
-      <button type="button" onClick={onClick}>
+      <button type="button" onClick={onClick} disabled={!isOnline}>
         Add
       </button>
     </div>

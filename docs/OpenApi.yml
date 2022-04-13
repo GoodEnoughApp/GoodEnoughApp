@@ -1252,13 +1252,13 @@ paths:
       parameters:
         - in: query
           name: startDate   
-          description: The beginning of the expiration date
+          description: The beginning of the endAt
           schema:
             type: string
             format: date
         - in: query
           name: endDate   
-          description: The end of the expiration date
+          description: The end of the endAt
           schema:
             type: string
             format: date
@@ -1271,6 +1271,11 @@ paths:
         - in: query
           name: used
           description: Filter items if they are used or not
+          schema:
+            type: boolean     
+        - in: query
+          name: expired
+          description: Filter items if they are expired or not
           schema:
             type: boolean     
       responses:
@@ -1351,6 +1356,8 @@ paths:
                   type: number 
                 isUsed:
                   type: boolean                
+                isExpired:
+                  type: boolean                
       responses:
         '200':
           description: Success
@@ -1414,7 +1421,7 @@ paths:
                     type: string
                     enum: ['ERROR_NOT_FOUND_ITEM']
         '409':
-          description: 'Expiration in the past, negative numbers'
+          description: 'Expiration in the past, negative numbers or the user try to change an item that reach an end state'
           content:
             application/json:
               schema: 
