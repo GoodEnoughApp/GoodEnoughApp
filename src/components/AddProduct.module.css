@@ -66,10 +66,10 @@ form.component {
 }
 
 .page section {
-  height: 100%;
+  height: calc(100% - var(--mobile-bottom-bar-height));
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .page section input {
