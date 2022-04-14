@@ -61,4 +61,8 @@ a {
 
   --mobile-breakpoint: 480px;
   --layout-top-height: 60px;
+
+  --mobile-bottom-bar-height: calc(
+    var(--bottom-bar-height) + var(--safe-area-inset)
+  );
 }

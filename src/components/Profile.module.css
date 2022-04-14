@@ -22,7 +22,7 @@ dialog.main::backdrop {
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 1fr;
-  grid-template-rows: 0.2fr 1.8fr;
+  grid-template-rows: calc(var(--item-height) + 10px) 1fr;
   gap: 0px 0px;
   grid-template-areas:
     '.'
@@ -46,6 +46,14 @@ dialog.main::backdrop {
   background: none;
   border: none;
   cursor: pointer;
+}
+
+dialog.main header button {
+  color: #012c63;
+}
+
+dialog.main header button:disabled {
+  opacity: 0.5;
 }
 
 .main > :first-child header {
@@ -110,7 +118,6 @@ dialog.main::backdrop {
 }
 
 .logout {
-  margin-top: auto;
   margin-bottom: 0px;
 }
 
@@ -144,7 +151,7 @@ dialog.main::backdrop {
     margin-right: 0px;
     margin-top: 2vh;
     max-width: 100%;
-    max-height: 100vh;
+    max-height: 100%;
 
     border-radius: 16px 16px 0px 0px;
   }
