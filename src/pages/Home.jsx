@@ -202,7 +202,7 @@ function Content({ isLoading, groups }) {
   const { setSelection, isOnline } = useContext(ViewContext);
   if (isLoading) {
     return (
-      <section>
+      <section className={styles.content}>
         <Loading />
       </section>
     );
@@ -210,7 +210,7 @@ function Content({ isLoading, groups }) {
 
   if (!groups.length) {
     return (
-      <section>
+      <section className={styles.content}>
         <Empty />
       </section>
     );
