@@ -213,7 +213,7 @@
       'navigation navigation';
     width: 100%;
     height: 100%;
-    grid-template-rows: 1fr calc(
+    grid-template-rows: calc(100% - var(--mobile-bottom-bar-height)) calc(
         var(--bottom-bar-height) + var(--safe-area-inset)
       );
   }
