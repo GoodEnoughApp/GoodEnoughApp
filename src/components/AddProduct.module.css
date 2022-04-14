@@ -86,8 +86,7 @@ form.component {
 }
 
 .options {
-  display: flex;
-  flex-direction: column;
+  overflow-y: auto;
 }
 
 .options div {
