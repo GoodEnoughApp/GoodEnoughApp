@@ -55,7 +55,7 @@ components:
           format: uuid
         barcode:
           type: string 
-        barcode_type:
+        barcodeType:
           type: string 
           enum:
             - UPC
@@ -711,7 +711,7 @@ paths:
                 categoryId:
                   type: string 
                   format: uuid
-                barcode_type:
+                barcodeType:
                   type: string 
                   enum:
                     - UPC
