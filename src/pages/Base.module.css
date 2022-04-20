@@ -54,6 +54,11 @@
   fill: #0360ae;
 }
 
+.selected-item > div:first-child svg path {
+  stroke: #0360ae;
+  fill: #0360ae;
+}
+
 .layout-2 {
   display: grid;
   grid-auto-columns: 1fr;
