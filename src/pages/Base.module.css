@@ -54,7 +54,8 @@
   fill: #0360ae;
 }
 
-.selected-item > div:first-child svg path {
+.selected-item > div:first-child svg path,
+.selected-item > div:first-child svg line {
   stroke: #0360ae;
   fill: #0360ae;
 }
