@@ -208,6 +208,7 @@ function Vinegar() {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 512 512"
       style={{ enableBackground: 'new 0 0 512 512' }}
       xmlSpace="preserve"
@@ -246,6 +247,7 @@ function Meat() {
       x="0px"
       y="0px"
       viewBox="0 0 249.456 249.456"
+      className={styles.icon}
       style={{ enableBackground: 'new 0 0 249.456 249.456' }}
       xmlSpace="preserve"
     >
@@ -293,6 +295,7 @@ function Dairy() {
       y="0px"
       viewBox="-205 51 256 256"
       xmlSpace="preserve"
+      className={styles.icon}
     >
       <path
         d="M5.5,190.2c-13.2,3.6-25.8-3.1-23.9-12.7c1-4.8,6-9.2,12.6-11.1c13.2-3.6,25.8,3.1,23.9,12.7C17.2,184,12.1,188.4,5.5,190.2
@@ -324,6 +327,7 @@ function Soup() {
       x="0px"
       y="0px"
       viewBox="0 0 330 330"
+      className={styles.icon}
       style={{ enableBackground: 'new 0 0 330 330' }}
     >
       <g id="XMLID_231_">
@@ -364,7 +368,7 @@ function Seasoning() {
   return (
     <svg
       version="1.1"
-      id="Layer_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -446,10 +450,10 @@ function Legumes() {
   return (
     <svg
       version="1.1"
-      id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 46.013 46.013"
       style={{ enableBackground: 'new 0 0 46.013 46.013' }}
       xmlSpace="preserve"
@@ -559,7 +563,7 @@ function Sauces() {
   return (
     <svg
       version="1.1"
-      id="Layer_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -615,7 +619,7 @@ function Vegetables() {
   return (
     <svg
       version="1.1"
-      id="Capa_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -656,7 +660,7 @@ function Pasta() {
   return (
     <svg
       version="1.1"
-      id="Layer_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -701,6 +705,7 @@ function Oil() {
   return (
     <svg
       version="1.1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 447.113 447.113"
       style={{ enableBackground: 'new 0 0 447.113 447.113' }}
@@ -720,6 +725,7 @@ function Nuts() {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 427.386 427.386"
       style={{ enableBackground: 'new 0 0 427.386 427.386' }}
       xmlSpace="preserve"
@@ -795,7 +801,7 @@ function Baking() {
       height="24px"
       viewBox="0 0 24 24"
       dataName="016_FOOD"
-      id="_016_FOOD"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path d="M9.75,22A7.71,7.71,0,0,1,4.29,8.8L8.8,4.29a7.7,7.7,0,0,1,12.53,2.4,1,1,0,1,1-1.83.79,5.7,5.7,0,0,0-9.28-1.77L5.71,10.22a5.71,5.71,0,1,0,8.07,8.07l4.51-4.51a5.68,5.68,0,0,0,1.58-3A1,1,0,0,1,21,10a1,1,0,0,1,.8,1.17,7.69,7.69,0,0,1-2.12,4L15.2,19.71A7.69,7.69,0,0,1,9.75,22Z" />
@@ -816,6 +822,7 @@ function Supplement() {
       width="146.182px"
       height="146.182px"
       viewBox="0 0 146.182 146.182"
+      className={styles.icon}
       style={{ enableBackground: 'new 0 0 146.182 146.182' }}
       xmlSpace="preserve"
     >
@@ -863,7 +870,7 @@ function Fruits() {
   return (
     <svg
       version="1.1"
-      id="Layer_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -924,6 +931,7 @@ function Condiments() {
       width="235.503px"
       height="235.503px"
       viewBox="0 0 235.503 235.503"
+      className={styles.icon}
       style={{ enableBackground: 'new 0 0 235.503 235.503' }}
       xmlSpace="preserve"
     >
@@ -969,6 +977,7 @@ function Poultry() {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 82.702 82.702"
       style={{ enableBackground: 'new 0 0 82.702 82.702' }}
       xmlSpace="preserve"
@@ -1004,6 +1013,7 @@ function Cheese() {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 219.617 219.617"
       style={{ enableBackground: 'new 0 0 219.617 219.617' }}
       xmlSpace="preserve"
@@ -1034,6 +1044,7 @@ function Grain() {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 54.081 54.081"
       style={{ enableBackground: 'new 0 0 54.081 54.081' }}
       xmlSpace="preserve"
@@ -1124,7 +1135,7 @@ function Desserts() {
   return (
     <svg
       version="1.1"
-      id="Layer_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -1173,6 +1184,7 @@ function Substitutes() {
       y="0px"
       width="480.874px"
       height="480.874px"
+      className={styles.icon}
       viewBox="0 0 480.874 480.874"
       style={{ enableBackground: 'new 0 0 480.874 480.874' }}
       xmlSpace="preserve"
@@ -1273,9 +1285,8 @@ function Seafood() {
   return (
     <svg
       version="1.1"
-      id="Icons"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
       viewBox="0 0 32 32"
@@ -1312,9 +1323,8 @@ function Wrapper() {
   return (
     <svg
       version="1.1"
-      id="Capa_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
       viewBox="0 0 57.654 57.654"
@@ -1392,9 +1402,9 @@ function Bread() {
     <svg
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
+      className={styles.icon}
       viewBox="0 0 418.187 418.187"
       style={{ enableBackground: 'new 0 0 418.187 418.187' }}
       xmlSpace="preserve"
@@ -1438,6 +1448,7 @@ function Spices() {
   return (
     <svg
       version="1.1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 319.894 319.894"
       style={{ enableBackground: 'new 0 0 319.894 319.894' }}
@@ -1457,6 +1468,7 @@ function Beverages() {
   return (
     <svg
       version="1.1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
@@ -1489,7 +1501,7 @@ function Sugar() {
   return (
     <svg
       version="1.1"
-      id="Layer_1"
+      className={styles.icon}
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
