@@ -1,46 +1,33 @@
 import PropTypes from 'prop-types';
 import styles from './Category.module.css';
 
-const validNames = [
-  'home',
-  'shopping-cart',
-  'settings',
-  'check-square',
-  'plus',
-  'chevron-left',
-  'share',
-  'user',
-  'lock',
-  'x',
-];
-export default function CategoryIcon({ name, color }) {
+const validNames = ['fish', 'other', 'wine_beer_spirits'];
+export function CategoryIcon({ name }) {
   switch (name) {
     case 'fish':
-      return <Fish color={color} />;
-
+      return <Fish />;
+    case 'wine_beer_spirits':
+      return <Wine />;
+    case 'dressings_vinegars':
+      return <Vinegar />;
     default:
-      return <Food color={color} />;
+      return <Food />;
   }
 }
 
 CategoryIcon.propTypes = {
   name: PropTypes.oneOf(validNames),
-  color: PropTypes.string,
 };
 
 CategoryIcon.defaultProps = {
-  color: '#000',
   name: '',
 };
 
-function Fish({ color }) {
+function Fish() {
   return (
     <svg
       version="1.1"
-      stroke={color}
-      fill={color}
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
       viewBox="0 0 512 512"
@@ -105,15 +92,77 @@ function Fish({ color }) {
   );
 }
 
-function Food({ color }) {
+function Wine() {
+  return (
+    <svg
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      viewBox="0 0 297 297"
+      className={styles.icon}
+      style={{ enableBackground: 'new 0 0 297 297' }}
+      xmlSpace="preserve"
+    >
+      <path
+        d="M67.723,137.012c-2.791,0-5.441,1.228-7.245,3.357c-1.804,2.13-2.58,4.945-2.121,7.698l23.5,140.998
+ c0.763,4.579,4.724,7.935,9.365,7.935h109.666c4.642,0,8.603-3.355,9.366-7.935l23.5-140.998c0.459-2.753-0.317-5.568-2.122-7.698
+ c-1.804-2.13-4.453-3.357-7.244-3.357h-4.448c1.584-5.864,1.954-13.162,0.811-18.591l-6.049-28.769
+ c-0.586-2.786-0.104-8.319,0.954-10.965l22.434-56.048c1.948-4.868-0.418-10.395-5.287-12.344l-24.021-9.614
+ c-4.868-1.946-10.395,0.418-12.344,5.287l-22.435,56.048c-1.058,2.644-4.528,6.982-6.875,8.596l-24.228,16.649
+ c-5.492,3.775-11.274,11.004-13.75,17.188l-13.033,32.562H67.723z M157.62,215.344h-40.871l5.034-59.343h31.162L157.62,215.344z
+  M177.407,224.158l-5.413-68.157h41.186L192.844,278.01H99.266L78.931,156.001h23.796l-5.773,68.035
+ c-0.226,2.648,0.671,5.27,2.469,7.227c1.799,1.958,4.334,3.071,6.992,3.071h61.478c0.008,0,0.016,0,0.02,0
+ C173.157,234.334,177.407,229.401,177.407,224.158z M136.573,137.012l10.209-25.506c1.058-2.644,4.527-6.98,6.875-8.594
+ l24.229-16.65c5.491-3.774,11.273-11.004,13.749-17.188l18.906-47.233l6.391,2.559L198.028,71.63
+ c-2.477,6.187-3.279,15.41-1.908,21.931l6.048,28.769c0.586,2.786,0.105,8.319-0.953,10.964l-1.488,3.719H136.573z"
+      />
+    </svg>
+  );
+}
+
+function Vinegar() {
+  return (
+    <svg
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      viewBox="0 0 512 512"
+      style={{ enableBackground: 'new 0 0 512 512' }}
+      xmlSpace="preserve"
+    >
+      <g>
+        <g>
+          <path
+            d="M321.164,223.418h-18.618V65.164c0-5.141-4.164-9.309-9.309-9.309h-9.309V9.309c0-5.141-4.164-9.309-9.309-9.309h-37.236
+			c-5.145,0-9.309,4.168-9.309,9.309v46.545h-9.309c-5.145,0-9.309,4.168-9.309,9.309v158.255h-18.618
+			c-5.145,0-9.309,4.168-9.309,9.309v269.964c0,5.141,4.164,9.309,9.309,9.309h130.327c5.145,0,9.309-4.168,9.309-9.309V232.727
+			C330.473,227.586,326.309,223.418,321.164,223.418z M246.691,18.618h18.618v37.236h-18.618V18.618z M228.073,74.473h9.309h37.236
+			h9.309v148.945h-55.855V74.473z M311.855,493.382H200.145V242.036h18.618h74.473h18.618V493.382z"
+          />
+        </g>
+      </g>
+      <g>
+        <g>
+          <path
+            d="M256,269.964c-25.664,0-46.545,20.882-46.545,46.545v65.164c0,25.664,20.882,46.545,46.545,46.545
+			s46.545-20.882,46.545-46.545v-65.164C302.545,290.846,281.664,269.964,256,269.964z M283.927,381.673
+			c0,15.4-12.527,27.927-27.927,27.927s-27.927-12.527-27.927-27.927v-65.164c0-15.4,12.527-27.927,27.927-27.927
+			s27.927,12.527,27.927,27.927V381.673z"
+          />
+        </g>
+      </g>
+    </svg>
+  );
+}
+
+function Food() {
   return (
     <svg
       version="1.1"
       id="Capa_1"
       xmlns="http://www.w3.org/2000/svg"
-      stroke={color}
-      fill={color}
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
       viewBox="0 0 60 60"

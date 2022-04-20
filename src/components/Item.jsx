@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import Icon from './Icon';
+import { CategoryIcon } from './Icon/Category';
 import styles from './Item.module.css';
 
 export function Group({ id, title, isExpired, isSoonToExpired, children }) {
@@ -31,6 +32,7 @@ export function Item({
   isLoading,
   onSelect,
   selectedClass,
+  product,
 }) {
   const classNames = [styles.item];
   if (selectedClass) {
@@ -39,7 +41,7 @@ export function Item({
   return (
     <div id={id} className={classNames.join(' ')}>
       <div className={styles.image}>
-        <img alt="product" />
+        <CategoryIcon name={product?.category?.type} />
       </div>
       <div onClick={onSelect} role="button" className={styles.content}>
         <div>
