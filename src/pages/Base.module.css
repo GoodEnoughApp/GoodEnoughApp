@@ -45,8 +45,19 @@
   transition: color ease-out 220ms;
 }
 
-.selected-item h5 {
+.selected-item {
   color: #0360ae;
+}
+
+.selected-item > div:first-child svg {
+  stroke: #0360ae;
+  fill: #0360ae;
+}
+
+.selected-item > div:first-child svg path,
+.selected-item > div:first-child svg line {
+  stroke: #0360ae;
+  fill: #0360ae;
 }
 
 .layout-2 {
