@@ -16,6 +16,7 @@
 
 .page nav {
   grid-area: navigation;
+  background: white;
 }
 
 .page > section:first-of-type {

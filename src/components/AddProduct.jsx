@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import { useState, useEffect, useContext, createContext } from 'react';
 import moment from 'moment';
 import Barcode from './Barcode';
@@ -49,6 +50,8 @@ export default function AddProduct({
     async function processBarcode() {
       try {
         let response = getProductByBarcode({ products, barcode });
+        console.log(`Product by barcode`);
+        console.log(response);
         if (response) {
           setProduct(response);
           setIsLoading(false);
@@ -142,6 +145,8 @@ function Details() {
 
 function Product() {
   const { product, goBack, api, onAdd } = useContext(ComponentContext);
+  console.log(`Product`);
+  console.log(product);
   const [cost, setCost] = useState(0);
   const [expirationDate, setExpirationDate] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -195,7 +200,7 @@ function Product() {
           <button type="submit">Save</button>
         </div>
       </header>
-      <div>
+      <div style={{ overflowY: 'auto' }}>
         <div className={styles.options}>
           <div>
             <span>Barcode</span>
@@ -211,7 +216,8 @@ function Product() {
           {description ? (
             <div>
               <span>Description</span>
-              <span>{description}</span>
+
+              <span dangerouslySetInnerHTML={{ __html: description }} />
             </div>
           ) : null}
 
