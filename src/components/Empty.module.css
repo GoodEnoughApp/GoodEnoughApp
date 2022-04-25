@@ -15,6 +15,7 @@
   font-size: 1.05rem;
   padding: 10px;
   color: #0360ae;
+  cursor: pointer;
 }
 
 .empty small {
