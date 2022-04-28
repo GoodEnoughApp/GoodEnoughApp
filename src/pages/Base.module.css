@@ -259,6 +259,8 @@
   font-size: 1rem;
   padding: 15px 30px;
   font-weight: bold;
+  border-left: 0px;
+  border-right: 0px;
 }
 
 .report .item {
@@ -276,6 +278,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.report .item .image svg {
+  stroke: rgb(6, 176, 219);
+  fill: #06b0db;
+}
+
+.report .item.expired .image svg {
+  stroke: rgb(255, 45, 85);
+  fill: #ff2d55;
 }
 
 .report .item .image img {
@@ -327,6 +339,10 @@
   stroke: #06b0db;
 }
 
+.content .chart.empty {
+  display: none;
+}
+
 @media only screen and (max-width: 480px) {
   .page {
     display: grid;
@@ -366,6 +382,10 @@
   .page.selected .selection {
     width: 100%;
     height: 100%;
+  }
+
+  .report .chart.empty {
+    display: flex;
   }
 }
 

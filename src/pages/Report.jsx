@@ -114,6 +114,7 @@ export default function Report() {
 }
 
 function Content({ isLoading }) {
+  const { items } = useContext(ViewContext);
   if (isLoading) {
     return (
       <section>
@@ -131,10 +132,18 @@ function Content({ isLoading }) {
       </div>
       <div className={[styles.list, styles.report].join(' ')}>
         <DatePicker />
-        <section className={styles['chart-container']}>
-          <ReportChart />
-        </section>
-        <Items />
+        {items.length ? (
+          <section className={styles['chart-container']}>
+            <ReportChart />
+          </section>
+        ) : null}
+
+        {!items.length ? (
+          <div className={[styles.chart, styles.empty].join(' ')}>
+            <Empty />
+          </div>
+        ) : null}
+        {items.length ? <Items /> : null}
       </div>
     </section>
   );
@@ -228,10 +237,10 @@ function ReportChart() {
               {
                 data: [data.isExpired, data.isUsed],
                 backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 45, 85, 0.2)',
+                  'rgba(6, 176, 219, 0.2)',
                 ],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                borderColor: ['rgba(255, 45, 85, 1)', 'rgba(6, 176, 219, 1)'],
                 borderWidth: 1,
               },
             ],
@@ -244,7 +253,6 @@ function ReportChart() {
 
 function Items() {
   const { items } = useContext(ViewContext);
-  console.log(items);
   return (
     <div className={[styles.list, styles.items].join(' ')}>
       <div className={styles.header}>Items</div>
@@ -256,9 +264,13 @@ function Items() {
 }
 
 function Item({ item }) {
-  const { id, quantity, cost, product } = item;
+  const { id, quantity, cost, product, isExpired } = item;
 
   const classNames = [styles.item];
+
+  if (isExpired) {
+    classNames.push(styles.expired);
+  }
 
   return (
     <div id={id} className={classNames.join(' ')}>
