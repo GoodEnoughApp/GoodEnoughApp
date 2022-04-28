@@ -39,6 +39,19 @@ export default function Navbar({ selected, onProfileClick }) {
         <button
           type="button"
           onClick={() => {
+            history.replace('/report');
+          }}
+          className={selected === 'report' ? styles.selected : null}
+        >
+          <Icon
+            name="pie-chart"
+            color={selected === 'report' ? selectedColor : unSelectedColor}
+          />
+          <span>Report</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
             if (onProfileClick) {
               onProfileClick();
             }

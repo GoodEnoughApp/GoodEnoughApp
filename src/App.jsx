@@ -12,6 +12,7 @@ import styles from './App.module.css';
 // Pages
 import Home from './pages/Home';
 import Shopping from './pages/Shopping';
+import Report from './pages/Report';
 import SignIn from './pages/authentication/SignIn';
 import SignUp from './pages/authentication/SignUp';
 import ForgetPassword from './pages/authentication/ForgetPassword';
@@ -86,6 +87,7 @@ function App() {
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/forget-password" component={ForgetPassword} />
             <Route exact path="/shopping" component={Shopping} />
+            <Route exact path="/report" component={Report} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />
           </Switch>

@@ -59,7 +59,7 @@ export default function Shopping() {
           onProfileClick={() => {
             setIsProfileOpen(true);
           }}
-          selected="shopping"
+          selected="report"
         />
         <Content isLoading={isLoading} />
         <Selection selection={selection} />
