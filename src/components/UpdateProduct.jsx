@@ -221,6 +221,41 @@ function Actions() {
 
     goBack();
   };
+  const onClickIsExpired = async () => {
+    if (!confirm('Are you sure you want to set the item as used?')) return;
+    try {
+      await api.updateItem({
+        itemId: id,
+        initialQuantity: item.initialQuantity,
+        quantity: item.quantity,
+        cost: item.cost,
+        isUsed: false,
+        isExpired: true,
+      });
+      item.isUsed = false;
+      item.isExpired = false;
+      onUpdate(item);
+    } catch (e) {
+      alert(e.message);
+      return;
+    }
+
+    if (confirm('Do you want to add to the shopping list?')) {
+      try {
+        await api.addItemToShopping({
+          productId: item.product.id,
+          quantity: item.quantity,
+          cost: item.cost,
+        });
+        // onDelete(item);
+      } catch (e) {
+        alert(e.message);
+        return;
+      }
+    }
+
+    goBack();
+  };
   const onClickDelete = () => {
     if (!confirm('Are you sure you want to remove the item?')) return;
 
@@ -231,7 +266,7 @@ function Actions() {
           alert('An error happened deleting the item');
           return;
         }
-        onDelete(item);
+        // onDelete(item);
         goBack();
       })
       .catch((err) => {
@@ -250,6 +285,16 @@ function Actions() {
           Set Item as Used
         </button>
       ) : null}
+      {moment(item.expirationDate).isAfter(moment(new Date())) ? null : (
+        <button
+          type="button"
+          className={styles.expired}
+          disabled={!isOnline}
+          onClick={onClickIsExpired}
+        >
+          Set Item as Expired
+        </button>
+      )}
 
       <button
         type="button"

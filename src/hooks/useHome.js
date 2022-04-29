@@ -6,7 +6,8 @@ async function fetchRemoteHomeData(api) {
   const { categories } = await api.getCategories();
   const { products } = await api.getProducts();
   let { items } = await api.getItems();
-  items = items.filter((i) => !i.isUsed);
+  items = items.filter((i) => i.isUsed === false);
+  items = items.filter((i) => i.isExpired === false);
 
   return {
     categories,

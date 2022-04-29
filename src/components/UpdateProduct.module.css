@@ -145,6 +145,10 @@
   color: #0360ae;
 }
 
+.actions button.expired {
+  color: #ff9500;
+}
+
 .actions button:first-of-type {
   border-top: 1px solid #c3c3c3;
 }
