@@ -4,6 +4,8 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 import { useEffect, useState } from 'react';
 import AppContext from './AppContext';
@@ -12,13 +14,16 @@ import styles from './App.module.css';
 // Pages
 import Home from './pages/Home';
 import Shopping from './pages/Shopping';
+import Report from './pages/Report';
 import SignIn from './pages/authentication/SignIn';
 import SignUp from './pages/authentication/SignUp';
 import ForgetPassword from './pages/authentication/ForgetPassword';
 
 import Api from './services/Api';
 
-const host = 'https://good-enough-webapp-staging.herokuapp.com';
+const host =
+  process.env.REACT_APP_HOST ||
+  'https://good-enough-webapp-staging.herokuapp.com';
 
 function getDeviceType(width) {
   if (width >= 481 && width <= 768) {
@@ -86,6 +91,7 @@ function App() {
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/forget-password" component={ForgetPassword} />
             <Route exact path="/shopping" component={Shopping} />
+            <Route exact path="/report" component={Report} />
             <Route exact path="/" component={Home} />
             <Redirect to="/" />
           </Switch>

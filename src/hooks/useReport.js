@@ -5,9 +5,7 @@ import { useHealth } from './health';
 async function fetchRemoteHomeData(api) {
   const { categories } = await api.getCategories();
   const { products } = await api.getProducts();
-  let { items } = await api.getItems();
-  items = items.filter((i) => i.isUsed === false);
-  items = items.filter((i) => i.isExpired === false);
+  const { items } = await api.getItems();
 
   return {
     categories,
@@ -30,7 +28,7 @@ async function fetchCachedHomeData() {
   };
 }
 
-export default function useHome(api) {
+export default function useReports(api) {
   const db = new Db();
   const { isOnline } = useHealth();
   const [error, setError] = useState(null);
@@ -38,44 +36,6 @@ export default function useHome(api) {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [items, setItems] = useState([]);
-
-  const onAddItem = (item) => {
-    setItems([...items, item]);
-    db.items
-      .add(item)
-      .then((result) => {
-        console.debug('Add item to the database', result);
-      })
-      .catch(console.error);
-  };
-
-  const onDeleteItem = (item) => {
-    console.log(`Delete item`, item);
-    setItems(items.filter((i) => i.id !== item.id));
-    db.items
-      .remove(item.id)
-      .then(() => {
-        console.debug('Remove item to the database', item);
-      })
-      .catch(console.error);
-  };
-
-  const onUpdateItem = (item) => {
-    setItems(
-      items.map((i) => {
-        if (i.id === item.id) {
-          return item;
-        }
-        return i;
-      }),
-    );
-    db.items
-      .save(item)
-      .then(() => {
-        console.debug('Update item to the database', item);
-      })
-      .catch(console.error);
-  };
 
   useEffect(() => {
     if (api === null) {
@@ -128,8 +88,5 @@ export default function useHome(api) {
     products,
     items,
     error,
-    onAddItem,
-    onDeleteItem,
-    onUpdateItem,
   };
 }

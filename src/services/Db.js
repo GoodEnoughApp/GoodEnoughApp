@@ -11,6 +11,19 @@ export class Store {
     this.store = new PouchDB(name, config);
   }
 
+  add = async (item) =>
+    new Promise((resolve, reject) => {
+      item = { ...item, _id: `${item.id}` };
+
+      this.store
+        .put(item)
+        .then(() => {
+          // item.rev = result.rev;
+          resolve(item);
+        })
+        .catch(reject);
+    });
+
   save = async (item) => {
     if (Array.isArray(item)) {
       return this.bulk(item);

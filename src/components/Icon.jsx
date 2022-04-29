@@ -12,6 +12,7 @@ const validNames = [
   'user',
   'lock',
   'x',
+  'pie-chart',
 ];
 export default function Icon({ name, color }) {
   switch (name) {
@@ -35,6 +36,8 @@ export default function Icon({ name, color }) {
       return <Lock color={color} />;
     case 'x':
       return <X color={color} />;
+    case 'pie-chart':
+      return <PieChart color={color} />;
     default:
       return null;
   }
@@ -247,6 +250,25 @@ function X({ color }) {
     >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function PieChart({ color }) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="feather feather-pie-chart"
+    >
+      <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+      <path d="M22 12A10 10 0 0 0 12 2v10z" />
     </svg>
   );
 }

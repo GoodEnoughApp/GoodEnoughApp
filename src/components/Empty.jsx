@@ -1,8 +1,8 @@
 import styles from './Empty.module.css';
 
-export function Empty({ onClick, type, isOnline }) {
+export function Empty({ onClick, type, isOnline, text }) {
   if (type === 'whale') {
-    return <EmptyWhale />;
+    return <EmptyWhale text={text} />;
   }
   return <EmptyPenguin onClick={onClick} isOnline={isOnline} />;
 }
@@ -102,13 +102,17 @@ function Penguin() {
   );
 }
 
-function EmptyWhale() {
+function EmptyWhale({ text }) {
   return (
     <div className={styles.empty}>
       <div className={styles.whale}>
         <Whale />
       </div>
-      <small>You don't have products in your shopping list</small>
+      {text ? (
+        <small>{text}</small>
+      ) : (
+        <small>You don't have products in your shopping list</small>
+      )}
     </div>
   );
 }
