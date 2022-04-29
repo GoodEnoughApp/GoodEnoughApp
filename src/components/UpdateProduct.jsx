@@ -81,7 +81,6 @@ function Options({ item }) {
           initialQuantity === 0 ? parseInt(`${quantity}`, 10) : initialQuantity,
         quantity: parseInt(`${quantity}`, 10),
         cost: parseFloat(`${cost}`),
-        isUsed: false,
       });
 
       if (response.status !== 'success') {
@@ -183,7 +182,7 @@ function Options({ item }) {
 }
 
 function Actions() {
-  const { api, item, goBack, onUpdate, onDelete, isOnline } =
+  const { api, item, goBack, onDelete, isOnline } =
     useContext(ComponentContext);
   const { id } = item;
   const onClickUsed = async () => {
@@ -191,15 +190,11 @@ function Actions() {
     try {
       await api.updateItem({
         itemId: id,
-        expirationDate: item.expirationDate,
-        initialQuantity: item.initialQuantity,
-        quantity: item.quantity,
-        cost: item.cost,
         isUsed: true,
       });
+      item.isExpired = false;
       item.isUsed = true;
-      item.is_used = true;
-      onUpdate(item);
+      onDelete(item);
     } catch (e) {
       alert(e.message);
       return;
@@ -212,7 +207,6 @@ function Actions() {
           quantity: item.quantity,
           cost: item.cost,
         });
-        onDelete(item);
       } catch (e) {
         alert(e.message);
         return;
@@ -222,19 +216,15 @@ function Actions() {
     goBack();
   };
   const onClickIsExpired = async () => {
-    if (!confirm('Are you sure you want to set the item as used?')) return;
+    if (!confirm('Are you sure you want to set the item as expired?')) return;
     try {
       await api.updateItem({
         itemId: id,
-        initialQuantity: item.initialQuantity,
-        quantity: item.quantity,
-        cost: item.cost,
-        isUsed: false,
         isExpired: true,
       });
       item.isUsed = false;
-      item.isExpired = false;
-      onUpdate(item);
+      item.isExpired = true;
+      onDelete(item);
     } catch (e) {
       alert(e.message);
       return;
@@ -247,7 +237,6 @@ function Actions() {
           quantity: item.quantity,
           cost: item.cost,
         });
-        // onDelete(item);
       } catch (e) {
         alert(e.message);
         return;

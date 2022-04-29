@@ -40,6 +40,8 @@ export default function useHome(api) {
   const [items, setItems] = useState([]);
 
   const onAddItem = (item) => {
+    console.log(`On add item`);
+    console.log(item);
     setItems([...items, item]);
 
     db.items
@@ -111,8 +113,6 @@ export default function useHome(api) {
     // I'm not online so i fetch from the cache
     fetchCachedHomeData()
       .then((result) => {
-        console.log(`I called from the cached`);
-        console.log(result);
         setCategories(result.categories);
         setProducts(result.products);
         setItems(result.items);

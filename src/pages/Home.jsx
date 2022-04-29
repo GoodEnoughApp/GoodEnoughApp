@@ -87,19 +87,20 @@ export default function Home() {
         const isExpired = expirationMoment.isSameOrBefore(now, 'day');
         const { productId } = item;
         const product = productsMap.get(productId);
+        if (product) {
+          item.product = product;
+          item.title = product.name;
+          if (isExpired) {
+            expiredItems.push(item);
+            return;
+          }
 
-        item.product = product;
-        item.title = product.name;
-        if (isExpired) {
-          expiredItems.push(item);
-          return;
+          if (!groupMap[expirationDate]) {
+            groupMap[expirationDate] = [];
+          }
+
+          groupMap[expirationDate].push(item);
         }
-
-        if (!groupMap[expirationDate]) {
-          groupMap[expirationDate] = [];
-        }
-
-        groupMap[expirationDate].push(item);
       });
 
     const data = [];
