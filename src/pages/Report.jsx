@@ -217,7 +217,7 @@ function ReportChart() {
       },
     );
     setData(response);
-  }, [startDate, endDate]);
+  }, [startDate, endDate, items]);
 
   if (!items.length) {
     return (

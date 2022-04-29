@@ -21,7 +21,9 @@ import ForgetPassword from './pages/authentication/ForgetPassword';
 
 import Api from './services/Api';
 
-const host = 'https://good-enough-webapp-staging.herokuapp.com';
+const host =
+  process.env.REACT_APP_HOST ||
+  'https://good-enough-webapp-staging.herokuapp.com';
 
 function getDeviceType(width) {
   if (width >= 481 && width <= 768) {

@@ -6,7 +6,8 @@ async function fetchRemoteHomeData(api) {
   const { categories } = await api.getCategories();
   const { products } = await api.getProducts();
   let { items } = await api.getItems();
-  items = items.filter((i) => !i.isUsed);
+  items = items.filter((i) => i.isUsed === false);
+  items = items.filter((i) => i.isExpired === false);
 
   return {
     categories,
@@ -40,16 +41,16 @@ export default function useHome(api) {
 
   const onAddItem = (item) => {
     setItems([...items, item]);
-
     db.items
-      .save(item)
-      .then(() => {
-        console.debug('Add item to the database', item);
+      .add(item)
+      .then((result) => {
+        console.debug('Add item to the database', result);
       })
       .catch(console.error);
   };
 
   const onDeleteItem = (item) => {
+    console.log(`Delete item`, item);
     setItems(items.filter((i) => i.id !== item.id));
     db.items
       .remove(item.id)
@@ -110,8 +111,6 @@ export default function useHome(api) {
     // I'm not online so i fetch from the cache
     fetchCachedHomeData()
       .then((result) => {
-        console.log(`I called from the cached`);
-        console.log(result);
         setCategories(result.categories);
         setProducts(result.products);
         setItems(result.items);

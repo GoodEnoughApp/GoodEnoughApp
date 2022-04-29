@@ -98,6 +98,10 @@ form.component {
   border-bottom: 1px solid #c3c3c3;
 }
 
+.options div > span:last-of-type {
+  max-width: 300px;
+}
+
 .options > div:last-of-type {
   margin-bottom: 30px;
 }
@@ -112,4 +116,10 @@ form.component {
   background: #fff;
   border: 0px;
   border-bottom: 1px solid #c3c3c3;
+}
+
+@media only screen and (max-width: 480px) {
+  .options div > span:last-of-type {
+    max-width: 200px;
+  }
 }
