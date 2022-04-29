@@ -40,14 +40,11 @@ export default function useHome(api) {
   const [items, setItems] = useState([]);
 
   const onAddItem = (item) => {
-    console.log(`On add item`);
-    console.log(item);
     setItems([...items, item]);
-
     db.items
-      .save(item)
-      .then(() => {
-        console.debug('Add item to the database', item);
+      .add(item)
+      .then((result) => {
+        console.debug('Add item to the database', result);
       })
       .catch(console.error);
   };

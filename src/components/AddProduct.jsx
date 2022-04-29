@@ -50,8 +50,6 @@ export default function AddProduct({
     async function processBarcode() {
       try {
         let response = getProductByBarcode({ products, barcode });
-        console.log(`Product by barcode`);
-        console.log(response);
         if (response) {
           setProduct(response);
           setIsLoading(false);
@@ -145,8 +143,6 @@ function Details() {
 
 function Product() {
   const { product, goBack, api, onAdd } = useContext(ComponentContext);
-  console.log(`Product`);
-  console.log(product);
   const [cost, setCost] = useState(0);
   const [expirationDate, setExpirationDate] = useState('');
   const [quantity, setQuantity] = useState(0);
@@ -171,6 +167,8 @@ function Product() {
         quantity: parseInt(`${quantity}`, 10),
         cost: parseFloat(`${cost}`),
       });
+
+      item.product = product;
 
       if (status === 'success') {
         onAdd(item);
