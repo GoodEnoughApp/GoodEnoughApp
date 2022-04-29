@@ -255,7 +255,7 @@ function Actions() {
           alert('An error happened deleting the item');
           return;
         }
-        // onDelete(item);
+        onDelete(item);
         goBack();
       })
       .catch((err) => {

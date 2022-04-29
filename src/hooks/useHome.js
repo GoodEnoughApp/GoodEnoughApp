@@ -50,6 +50,7 @@ export default function useHome(api) {
   };
 
   const onDeleteItem = (item) => {
+    console.log(`Delete item`, item);
     setItems(items.filter((i) => i.id !== item.id));
     db.items
       .remove(item.id)
