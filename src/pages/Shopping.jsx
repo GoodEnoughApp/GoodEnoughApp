@@ -15,6 +15,7 @@ import { useHealth } from '../hooks/health';
 import useShopping from '../hooks/useShopping';
 
 import styles from './Base.module.css';
+import { CategoryIcon } from '../components/Icon/Category';
 
 const ViewContext = createContext({});
 
@@ -198,7 +199,7 @@ function Selection({ selection }) {
 function ShoppingItem({ item }) {
   const { api, setSelection, selection, onRemoveItem, isOnline } =
     useContext(ViewContext);
-  const { id, title, quantity, cost } = item;
+  const { id, title, quantity, cost, product } = item;
 
   const [isLoading, setIsLoading] = useState(false);
   const onClickChecked = async () => {
@@ -233,7 +234,7 @@ function ShoppingItem({ item }) {
   return (
     <div id={id} className={classNames.join(' ')}>
       <div className={styles.image}>
-        <img alt="product" />
+        <CategoryIcon name={product?.category?.type} />
       </div>
       <div
         role="button"
