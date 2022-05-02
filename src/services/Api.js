@@ -340,7 +340,18 @@ export default class Api {
     quantity,
     cost,
     isUsed,
+    isExpired,
   }) => {
+    console.log(`Update item body`);
+    console.log({
+      itemId,
+      expirationDate,
+      initialQuantity,
+      quantity,
+      cost,
+      isUsed,
+      isExpired,
+    });
     const url = `${this.host}/items/${itemId}`;
     try {
       const { data } = await put(
@@ -351,6 +362,7 @@ export default class Api {
           quantity,
           cost,
           isUsed,
+          isExpired,
         },
         {
           headers: {
